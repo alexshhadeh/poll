@@ -1,9 +1,11 @@
 import { React } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { Layout } from './components/Layout/Layout';
 
 export const App = () => {
   return (
-    <div>
-      <h1>App</h1>
-    </div>
+    <BrowserRouter basename="/">
+      <Layout />
+    </BrowserRouter>
   );
 };
