@@ -1,5 +1,5 @@
 import React from 'react';
 
-export const SingupView = () => {
-  return <h1>Singup View</h1>;
+export const SignupView = () => {
+  return <h1>Signup View</h1>;
 };

@@ -1,20 +1,29 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+// import { createPWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({
+      jsxImportSource: '@emotion/react',
+      babel: {
+        plugins: ['@emotion/babel-plugin'],
+      },
+    }),
+  ],
 });
 
-// from https://blog.reactprocoder.com/how-to-setup-pwaprogressive-web-app-in-vite-react-app
-// to merge with code above later
-// import { createPWA } from 'vite-plugin-pwa'
-
-// const pwaPlugin = createPWA({
-//   config: require('./pwa.config.js'),
-// })
-
-// export default {
-//   // Your other Vite config options...
-//   plugins: [pwaPlugin],
-// }
+// VitePWA({
+//   registerType: 'autoUpdate',
+//   manifest: {
+//     icons: [
+//       {
+//         src: '/icons/pwa-icon-144-144.png',
+//         sizes: '144x144',
+//         type: 'image/png',
+//         purpose: 'any maskable',
+//       },
+//     ],
+//   },
+// }),
