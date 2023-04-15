@@ -1,15 +1,18 @@
 import React from 'react';
 import { useState, useCallback, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-
+import { useNavigate } from 'react-router';
 
 import { Poll } from '../../poll/poll'
 
 
 export const PollView = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [poll, setPoll] = useState();
+  const navigate = useNavigate();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pollId = searchParams.get("id");
+
+  const [poll, setPoll] = useState();
   const [choices, setChoices] = useState({});
 
   const updateChoices = (index, value) => {
@@ -18,7 +21,6 @@ export const PollView = () => {
   };
 
   const fetchPoll = useCallback(async () => {
-    const pollId = searchParams.get("id");
     const poll = await Poll.poll(pollId)
     setPoll(poll);
   }, [])
@@ -53,24 +55,10 @@ export const PollView = () => {
       })}
 
       <br />
-      <button onClick={() => { Poll.vote(choices) }}>Submit</button>
+      <button onClick={() => {
+        Poll.vote(pollId, choices)
+        navigate(`/results?id=${pollId}`);
+      }}>Submit</button>
     </div>
-
-    // <div className="ViewPoll">
-    //   title: {poll ? poll.title : poll}
-    //   allow_multiselect: {poll ? String(poll.allow_multiselect) : poll}
-    //   fields:
-    //   <br />
-    //   <table>
-    //     {
-    //       poll?.fields.map((field, index) => (
-    //         <td>
-    //           {field}
-    //         </td>
-    //       ))
-    //     }
-    //   </table>
-    // </div>
-
   );
 };

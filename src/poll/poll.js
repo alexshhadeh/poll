@@ -22,13 +22,9 @@ export class Poll {
         }
     }
 
-    static delete() {
-
-    }
-
-
-    static results() {
-
+    static async results(pollId) {
+        const poll = await firestore.getPoll(pollId);
+        return poll.fields
     }
 
     static async poll(pollId) {
@@ -38,10 +34,10 @@ export class Poll {
         return poll;
     }
 
-    static vote(choices) {
+    static vote(pollId, choices) {
         console.log("Sending vote choices")
         if (this.verifyVotingChoices(choices)) {
-            console.log(choices)
+            firestore.sendVotes(pollId, choices)
         }
     }
 
