@@ -6,22 +6,45 @@ import { Poll } from '../../poll/poll';
 
 export const ManagePollView = () => {
     const [searchParams] = useSearchParams();
+    const pollId = searchParams.get('id');
     const [pollResults, setPollResults] = useState();
+    const pollLink = `${window.location.origin}/poll?id=${pollId}`;
+
+    const [poll, setPoll] = useState();
 
     const fetchPollResults = useCallback(async () => {
-        const pollId = searchParams.get('id');
         const pollResults = await Poll.results(pollId);
         setPollResults(pollResults);
     }, [searchParams]);
 
-    // the useEffect is only there to call `fetchData` at the right time
+
+    const fetchPoll = useCallback(async () => {
+        const poll = await Poll.poll(pollId);
+        setAllowViewResults(poll.allow_view_results);
+        setPoll(poll);
+    }, [pollId]);
+
+    const [allowViewResults, setAllowViewResults] = useState(false);
+
+    const toggleAllowViewResults = () => {
+        setAllowViewResults(!allowViewResults);
+    };
+
     useEffect(() => {
         fetchPollResults();
     }, [fetchPollResults]);
 
+    useEffect(() => {
+        fetchPoll();
+    }, [fetchPoll]);
+
     return (
         <div>
             Poll has been created successfuly! Share your poll to others using the link below:
+            <br />
+            <a href={pollLink}>{pollLink}</a>
+            <br />
+            Results:
             <br />
             {pollResults &&
                 Object.keys(pollResults).map((result, index) => {
@@ -31,6 +54,12 @@ export const ManagePollView = () => {
                         </div>
                     );
                 })}
+            <br />
+            Allow voters to see results
+            <br />
+            <button onClick={toggleAllowViewResults}>
+                {allowViewResults ? 'On' : 'Off'}
+            </button>
         </div>
     );
 };
