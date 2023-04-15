@@ -7,11 +7,11 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material';
-
-import { styles } from './styles';
 import { useNavigate } from 'react-router';
 
+import { styles } from './styles';
 import { Poll } from '../../poll/poll';
+import { routes } from '../../../routes';
 
 export const CreatePollView = () => {
   const [alignment, setAlignment] = React.useState('web');
@@ -108,7 +108,7 @@ export const CreatePollView = () => {
             fields,
             allowMultiselect
           );
-          navigate(`/poll?id=${pollId}`);
+          navigate(routes.pollViewById(pollId));
         }}
       >
         Create
