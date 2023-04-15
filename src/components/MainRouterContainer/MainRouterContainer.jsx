@@ -16,7 +16,6 @@ export const MainRouterContainer = () => {
       <Route path="/create" element={<CreatePollView />} />
       <Route path="/poll" element={<PollView />} />
       <Route path="/results" element={<PollResultsView />} />
-
-    </Routes >
+    </Routes>
   );
 };

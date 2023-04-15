@@ -1,29 +1,30 @@
 import React from 'react';
-import { useState, useCallback, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useState, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useNavigate } from 'react-router';
 
-import { Poll } from '../../poll/poll'
-
+import { Poll } from '../../poll/poll';
 
 export const PollView = () => {
   const navigate = useNavigate();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const pollId = searchParams.get("id");
+  const [searchParams] = useSearchParams();
+  const pollId = searchParams.get('id');
 
   const [poll, setPoll] = useState();
-  const [choices, setChoices] = useState({});
+  const [choices] = useState({});
 
-  const updateChoices = (index, value) => {
-    choices[index] = value;
-    setChoices([...choices]);
-  };
+  console.log(choices);
+
+  // const updateChoices = (index, value) => {
+  //   choices[index] = value;
+  //   setChoices([...choices]);
+  // };
 
   const fetchPoll = useCallback(async () => {
-    const poll = await Poll.poll(pollId)
+    const poll = await Poll.poll(pollId);
     setPoll(poll);
-  }, [])
+  }, [pollId]);
 
   const vote = (field) => {
     if (choices[field]) {
@@ -35,8 +36,8 @@ export const PollView = () => {
 
   // the useEffect is only there to call `fetchData` at the right time
   useEffect(() => {
-    fetchPoll()
-  }, [])
+    fetchPoll();
+  }, [fetchPoll]);
 
   return (
     <div>
@@ -44,21 +45,21 @@ export const PollView = () => {
       {poll?.fields.map((field, index) => {
         return (
           <div key={'field_' + index}>
-            <input
-              type="text"
-              value={field}
-              readOnly
-            />
+            <input type="text" value={field} readOnly />
             <button onClick={() => vote(field)}>Vote</button>
           </div>
-        )
+        );
       })}
 
       <br />
-      <button onClick={() => {
-        Poll.vote(pollId, choices)
-        navigate(`/results?id=${pollId}`);
-      }}>Submit</button>
+      <button
+        onClick={() => {
+          Poll.vote(pollId, choices);
+          navigate(`/results?id=${pollId}`);
+        }}
+      >
+        Submit
+      </button>
     </div>
   );
 };

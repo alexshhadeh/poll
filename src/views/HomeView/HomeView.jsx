@@ -8,13 +8,10 @@ const style = css`
 
 const color = 'white';
 
-
-
 export const HomeView = () => {
-
   return (
     <div>
-      <Button variant="contained" >Hello World</Button>
+      <Button variant="contained">Hello World</Button>
       <h1 css={style}>Home View</h1>
       <div
         css={css`

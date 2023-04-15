@@ -75,7 +75,7 @@ export const LoginView = () => {
       </Grid>
 
       <Typography variant="body2" color="textSecondary" css={styles.or}>
-        Dont have an account? <a href="#">Register now</a>
+        Dont have an account? <a href="/#">Register now</a>
       </Typography>
     </div>
   );

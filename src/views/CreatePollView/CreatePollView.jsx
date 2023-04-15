@@ -11,9 +11,7 @@ import {
 import { styles } from './styles';
 import { useNavigate } from 'react-router';
 
-import { Poll } from '../../poll/poll'
-
-
+import { Poll } from '../../poll/poll';
 
 export const CreatePollView = () => {
   const [alignment, setAlignment] = React.useState('web');
@@ -25,14 +23,14 @@ export const CreatePollView = () => {
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
-  }
+  };
   const handleFieldChange = (index) => (event) => {
     const newArray = [...fields];
     newArray[index] = event.target.value;
     setFields(newArray);
-  }
+  };
   const handleAllowMultiselectChange = (event, newAlignment) => {
-    if (event.target.value == 'web') {
+    if (event.target.value === 'web') {
       setAllowMultiselect(false);
     } else {
       setAllowMultiselect(true);
@@ -40,7 +38,7 @@ export const CreatePollView = () => {
     setAlignment(newAlignment);
   };
 
-  const addField = () => {
+  const addField = (dasds) => {
     setFields([...fields, '']);
   };
 
@@ -64,7 +62,6 @@ export const CreatePollView = () => {
         value={title}
         onChange={handleTitleChange}
       />
-
 
       {fields.map((_, index) => (
         <div css={styles.optionStyles} key={`field_${index}`}>
@@ -104,12 +101,15 @@ export const CreatePollView = () => {
         color="primary"
         fullWidth
         css={styles.button}
-        onClick={
-          async () => {
-            const pollId = await Poll.create('fake_user_id', title, fields, allowMultiselect);
-            navigate(`/poll?id=${pollId}`);
-          }
-        }
+        onClick={async () => {
+          const pollId = await Poll.create(
+            'fake_user_id',
+            title,
+            fields,
+            allowMultiselect
+          );
+          navigate(`/poll?id=${pollId}`);
+        }}
       >
         Create
       </Button>

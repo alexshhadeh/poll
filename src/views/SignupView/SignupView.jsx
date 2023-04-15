@@ -22,18 +22,8 @@ export const SignupView = () => {
       <Avatar alt="App Logo" css={styles.logo} sx={{ width: 56, height: 56 }}>
         Register
       </Avatar>
-      <TextField
-        label="Username"
-        type="text"
-        fullWidth
-        css={styles.input}
-      />
-      <TextField
-        label="Email"
-        type="email"
-        fullWidth
-        css={styles.input}
-      />
+      <TextField label="Username" type="text" fullWidth css={styles.input} />
+      <TextField label="Email" type="email" fullWidth css={styles.input} />
       <TextField
         label="Password"
         type="password"
@@ -96,7 +86,7 @@ export const SignupView = () => {
       </Grid>
 
       <Typography variant="body2" color="textSecondary" css={styles.or}>
-        Already have an account? <a href="#">Login now</a>
+        Already have an account? <a href="/#">Login now</a>
       </Typography>
     </div>
   );
