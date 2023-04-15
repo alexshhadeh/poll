@@ -5,6 +5,7 @@ import { LoginView } from '../../views/LoginView/LoginView';
 import { CreatePollView } from '../../views/CreatePollView/CreatePollView';
 import { PollView } from '../../views/PollView/PollView';
 import { PollResultsView } from '../../views/PollResultsView/PollResultsView';
+import { ManagePollView } from '../../views/ManagePollView/ManagePollView';
 import { SignupView } from '../../views/SignupView/SignupView';
 
 export const MainRouterContainer = () => {
@@ -16,6 +17,8 @@ export const MainRouterContainer = () => {
       <Route path="/create" element={<CreatePollView />} />
       <Route path="/poll" element={<PollView />} />
       <Route path="/results" element={<PollResultsView />} />
+      <Route path="/manage" element={<ManagePollView />} />
+
     </Routes>
   );
 };

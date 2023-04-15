@@ -34,10 +34,10 @@ export class Poll {
         return poll;
     }
 
-    static vote(pollId, choices) {
+    static async vote(pollId, choices) {
         console.log("Sending vote choices")
         if (this.verifyVotingChoices(choices)) {
-            firestore.sendVotes(pollId, choices)
+            await firestore.sendVotes(pollId, choices)
         }
     }
 

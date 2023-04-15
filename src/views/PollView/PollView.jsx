@@ -53,13 +53,13 @@ export const PollView = () => {
 
       <br />
       <button
-        onClick={() => {
-          Poll.vote(pollId, choices);
+        onClick={async () => {
+          await Poll.vote(pollId, choices);
           navigate(`/results?id=${pollId}`);
         }}
       >
         Submit
       </button>
-    </div>
+    </div >
   );
 };
