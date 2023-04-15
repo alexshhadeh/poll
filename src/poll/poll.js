@@ -7,35 +7,42 @@ export class Poll {
         const params = {
             user_id: userId,
             title: title,
-            fields: fields,
+            fields: fields.reduce((acc, curr) => {
+                acc[curr] = 0;
+                return acc;
+            }, {}),
+
             allow_multiselect: allow_multiselect
         }
 
         if (Poll.verifyParams(params)) {
-
-            firestore.createPoll(params)
+            console.log('params that are sent to db')
+            console.log(params)
+            return firestore.createPoll(params)
         }
-
     }
 
     static delete() {
 
     }
 
-    static get link() {
+
+    static results() {
 
     }
 
-    static get results() {
-
+    static async poll(pollId) {
+        const poll = await firestore.getPoll(pollId);
+        //Return only field names to hide current vote results
+        poll.fields = Object.keys(poll.fields)
+        return poll;
     }
 
-    static get poll() {
-
-    }
-
-    static vote() {
-
+    static vote(choices) {
+        console.log("Sending vote choices")
+        if (this.verifyVotingChoices(choices)) {
+            console.log(choices)
+        }
     }
 
     static verifyParams(pollObject) {
@@ -46,9 +53,13 @@ export class Poll {
         }
         return true;
     }
-    static addDeletionTime() { }
-    static addLink() { }
-    static addUserId() {
 
+    static verifyVotingChoices(choices) {
+        if (choices && Object.keys(choices).length) {
+            return true;
+        } else {
+            throw new Error('No choices were provided!')
+        }
     }
+
 }

@@ -21,17 +21,41 @@ import {
 
 import { styles } from './styles';
 
+import { Poll } from '../../poll/poll'
+import { useNavigate } from "react-router-dom";
+
+
+
 export const CreatePollView = () => {
   const [alignment, setAlignment] = React.useState('web');
   const [counter, setCounter] = useState(0);
+  const [title, setTitle] = useState('');
+  const [fields, setFields] = useState(['']);
+  const [allowMultiselect, setAllowMultiselect] = useState(false);
 
-  const handleChange = (event, newAlignment) => {
+  const navigate = useNavigate();
+
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value);
+  }
+  const handleFieldChange = (index) => (event) => {
+    const newArray = [...fields];
+    newArray[index] = event.target.value;
+    setFields(newArray);
+  }
+  const handleAllowMultiselectChange = (event, newAlignment) => {
+    if (event.target.value == 'web') {
+      setAllowMultiselect(false);
+    } else {
+      setAllowMultiselect(true);
+    }
     setAlignment(newAlignment);
   };
 
-  const handleClick = () => {
-    setCounter(counter + 1);
-    console.log(counter);
+  const handleAddField = () => {
+    const newArray = [...fields];
+    newArray.push('');
+    setFields(newArray);
   };
   return (
     <div css={styles.root}>
@@ -44,39 +68,45 @@ export const CreatePollView = () => {
         type="text"
         fullWidth
         css={styles.input}
+        value={title}
+        onChange={handleTitleChange}
       />
-      <TextField
-        label="Option"
-        type="text"
-        fullWidth
-        css={styles.input}
-      />
-      {Array.from(Array(counter)).map((c, index) => {
+
+      {fields.map((_, index) => {
         return <TextField
-        key={c}
-        label="Option"
-        type="text"
-        fullWidth
-        css={styles.input}
-      />;
-      })}
-      <Fab color="primary" aria-label="add" onClick={handleClick} css={styles.button}>
+          key={`field_${index}`}
+          label="Option"
+          type="text"
+          value={fields[index]}
+          onChange={handleFieldChange(index)}
+          fullWidth
+          css={styles.input}
+        />;
+      }
+      )}
+
+      <Fab color="primary" aria-label="add" onClick={handleAddField} css={styles.button}>
         <AddIcon />
       </Fab>
 
       <ToggleButtonGroup
-      color="primary"
-      value={alignment}
-      exclusive
-      onChange={handleChange}
-      aria-label="Platform"
-      css={styles.button}
-    >
-      <ToggleButton value="web">Single-choice</ToggleButton>
-      <ToggleButton value="android">Multiple-choice</ToggleButton>
-    </ToggleButtonGroup>
+        color="primary"
+        value={alignment}
+        exclusive
+        onChange={handleAllowMultiselectChange}
+        aria-label="Platform"
+        css={styles.button}
+      >
+        <ToggleButton value="web">Single-choice</ToggleButton>
+        <ToggleButton value="android">Multiple-choice</ToggleButton>
+      </ToggleButtonGroup>
 
-      <Button variant="contained" color="primary" fullWidth css={styles.button}>
+      <Button variant="contained" color="primary" fullWidth css={styles.button} onClick={
+        async () => {
+          const pollId = await Poll.create('fake_user_id', title, fields, allowMultiselect);
+          navigate(`/poll?id=${pollId}`);
+        }
+      }>
         Create
       </Button>
     </div>
