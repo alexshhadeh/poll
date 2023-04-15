@@ -1,38 +1,60 @@
 import React from 'react';
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Avatar,
   Button,
-  Divider,
-  Grid,
-  IconButton,
-  InputAdornment,
   TextField,
-  Typography,
-  Fab,
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material';
-import {
-  Facebook as FacebookIcon,
-  Google as GoogleIcon,
-  Add as AddIcon,
-} from '@mui/icons-material';
 
 import { styles } from './styles';
+import { useNavigate } from 'react-router';
 
 export const CreatePollView = () => {
   const [alignment, setAlignment] = React.useState('web');
-  const [counter, setCounter] = useState(0);
+  const [options, setOptions] = useState([]);
+  const [pollQuestion, setPollQuestion] = useState('');
+
+  const naviagte = useNavigate();
 
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
   };
 
-  const handleClick = () => {
-    setCounter(counter + 1);
-    console.log(counter);
+  const addOption = () => {
+    setOptions([...options, '']);
   };
+
+  const updateOption = (option, index) => {
+    const newOptions = [...options];
+    newOptions[index] = option;
+    setOptions(newOptions);
+  };
+
+  const removeOption = (index) => {
+    const newOptions = [...options];
+    newOptions.splice(index, 1);
+    setOptions(newOptions);
+  };
+
+  const handlePollQuestionChange = (event) => {
+    setPollQuestion(event.target.value);
+  };
+
+  const handleCreatePoll = (_) => {
+    const output = {
+      pollQuestion,
+      options,
+    };
+
+    console.log(output);
+
+    alert('A poll has just been created!');
+
+    naviagte('/home');
+  };
+
   return (
     <div css={styles.root}>
       <Avatar alt="App Logo" css={styles.logo} sx={{ width: 56, height: 56 }}>
@@ -46,37 +68,52 @@ export const CreatePollView = () => {
         css={styles.input}
       />
       <TextField
-        label="Option"
-        type="text"
+        label="Poll Question"
+        value={pollQuestion}
+        onChange={handlePollQuestionChange}
         fullWidth
-        css={styles.input}
+        margin="normal"
       />
-      {Array.from(Array(counter)).map((c, index) => {
-        return <TextField
-        key={c}
-        label="Option"
-        type="text"
-        fullWidth
-        css={styles.input}
-      />;
-      })}
-      <Fab color="primary" aria-label="add" onClick={handleClick} css={styles.button}>
-        <AddIcon />
-      </Fab>
-
+      {options.map((option, index) => (
+        <div css={styles.optionStyles} key={index}>
+          <TextField
+            label={`Option ${index + 1}`}
+            value={option}
+            onChange={(event) => updateOption(event.target.value, index)}
+            fullWidth
+            margin="normal"
+          />
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => removeOption(index)}
+          >
+            Remove
+          </Button>
+        </div>
+      ))}
+      <Button variant="outlined" onClick={addOption} margin="normal">
+        Add Option
+      </Button>
       <ToggleButtonGroup
-      color="primary"
-      value={alignment}
-      exclusive
-      onChange={handleChange}
-      aria-label="Platform"
-      css={styles.button}
-    >
-      <ToggleButton value="web">Single-choice</ToggleButton>
-      <ToggleButton value="android">Multiple-choice</ToggleButton>
-    </ToggleButtonGroup>
+        color="primary"
+        value={alignment}
+        exclusive
+        onChange={handleChange}
+        aria-label="Platform"
+        css={styles.button}
+      >
+        <ToggleButton value="web">Single-choice</ToggleButton>
+        <ToggleButton value="android">Multiple-choice</ToggleButton>
+      </ToggleButtonGroup>
 
-      <Button variant="contained" color="primary" fullWidth css={styles.button}>
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        css={styles.button}
+        onClick={handleCreatePoll}
+      >
         Create
       </Button>
     </div>
