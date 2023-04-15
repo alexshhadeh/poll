@@ -1,13 +1,16 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
   Avatar,
   Button,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { useNavigate } from 'react-router';
+import { isEmpty } from 'lodash';
 
 import { styles } from './styles';
 import { Poll } from '../../poll/poll';
@@ -16,19 +19,34 @@ import { routes } from '../../../routes';
 export const CreatePollView = () => {
   const [alignment, setAlignment] = React.useState('web');
   const [title, setTitle] = useState('');
-  const [fields, setFields] = useState(['']);
+  const [fields, setFields] = useState([]);
   const [allowMultiselect, setAllowMultiselect] = useState(false);
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpenSnackbar = () => {
+    setOpen(true);
+  };
+
+  const handleCloseSnackbar = (_, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const navigate = useNavigate();
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
+
   const handleFieldChange = (index) => (event) => {
     const newArray = [...fields];
     newArray[index] = event.target.value;
     setFields(newArray);
   };
+
   const handleAllowMultiselectChange = (event, newAlignment) => {
     if (event.target.value === 'web') {
       setAllowMultiselect(false);
@@ -38,8 +56,8 @@ export const CreatePollView = () => {
     setAlignment(newAlignment);
   };
 
-  const addField = (dasds) => {
-    setFields([...fields, '']);
+  const addField = (_) => {
+    setFields((prevFields) => [...prevFields, '']);
   };
 
   const removeField = (index) => {
@@ -48,8 +66,39 @@ export const CreatePollView = () => {
     setFields(newFields);
   };
 
+  const handleSubmit = useCallback(async () => {
+    const filteredFields = fields.filter((element) => element !== '');
+    if (title && !isEmpty(filteredFields)) {
+      console.log(fields.length);
+
+      const pollId = await Poll.create(
+        'fake_user_id',
+        title,
+        filteredFields,
+        allowMultiselect
+      );
+
+      navigate(routes.pollViewById(pollId));
+    } else {
+      handleOpenSnackbar();
+    }
+  }, [allowMultiselect, fields, navigate, title]);
+
   return (
     <div css={styles.root}>
+      <Snackbar
+        open={open}
+        autoHideDuration={2000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="error"
+          sx={{ width: '100%' }}
+        >
+          Please provide valid input
+        </Alert>
+      </Snackbar>
       <Avatar alt="App Logo" css={styles.logo} sx={{ width: 56, height: 56 }}>
         Create a poll
       </Avatar>
@@ -76,12 +125,18 @@ export const CreatePollView = () => {
             variant="outlined"
             color="error"
             onClick={() => removeField(index)}
+            css={styles.removeButton}
           >
             Remove
           </Button>
         </div>
       ))}
-      <Button variant="outlined" onClick={addField} margin="normal">
+      <Button
+        variant="outlined"
+        onClick={addField}
+        margin="normal"
+        css={styles.addOptionButton}
+      >
         Add Option
       </Button>
       <ToggleButtonGroup
@@ -101,15 +156,7 @@ export const CreatePollView = () => {
         color="primary"
         fullWidth
         css={styles.button}
-        onClick={async () => {
-          const pollId = await Poll.create(
-            'fake_user_id',
-            title,
-            fields,
-            allowMultiselect
-          );
-          navigate(routes.pollViewById(pollId));
-        }}
+        onClick={handleSubmit}
       >
         Create
       </Button>

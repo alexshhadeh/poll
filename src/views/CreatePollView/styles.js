@@ -49,11 +49,17 @@ export const styles = {
   optionStyles: css`
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 
     & > * {
       margin: 0.5rem;
     }
+  `,
+  removeButton: css`
+    margin-left: 8px;
+  `,
+  addOptionButton: css`
+    margin-top: 8px;
   `,
 };
