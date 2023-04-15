@@ -1,34 +1,22 @@
 import React from 'react';
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Avatar,
   Button,
-  Divider,
-  Grid,
-  IconButton,
-  InputAdornment,
   TextField,
-  Typography,
-  Fab,
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material';
-import {
-  Facebook as FacebookIcon,
-  Google as GoogleIcon,
-  Add as AddIcon,
-} from '@mui/icons-material';
 
 import { styles } from './styles';
+import { useNavigate } from 'react-router';
 
 import { Poll } from '../../poll/poll'
-import { useNavigate } from "react-router-dom";
 
 
 
 export const CreatePollView = () => {
   const [alignment, setAlignment] = React.useState('web');
-  const [counter, setCounter] = useState(0);
   const [title, setTitle] = useState('');
   const [fields, setFields] = useState(['']);
   const [allowMultiselect, setAllowMultiselect] = useState(false);
@@ -52,18 +40,23 @@ export const CreatePollView = () => {
     setAlignment(newAlignment);
   };
 
-  const handleAddField = () => {
-    const newArray = [...fields];
-    newArray.push('');
-    setFields(newArray);
+  const addField = () => {
+    setFields([...fields, '']);
   };
+
+  const removeField = (index) => {
+    const newFields = [...fields];
+    newFields.splice(index, 1);
+    setFields(newFields);
+  };
+
   return (
     <div css={styles.root}>
       <Avatar alt="App Logo" css={styles.logo} sx={{ width: 56, height: 56 }}>
         Create a poll
       </Avatar>
       <TextField
-        label="Title"
+        label="Poll Question"
         variant="standard"
         type="text"
         fullWidth
@@ -72,23 +65,28 @@ export const CreatePollView = () => {
         onChange={handleTitleChange}
       />
 
-      {fields.map((_, index) => {
-        return <TextField
-          key={`field_${index}`}
-          label="Option"
-          type="text"
-          value={fields[index]}
-          onChange={handleFieldChange(index)}
-          fullWidth
-          css={styles.input}
-        />;
-      }
-      )}
 
-      <Fab color="primary" aria-label="add" onClick={handleAddField} css={styles.button}>
-        <AddIcon />
-      </Fab>
-
+      {fields.map((_, index) => (
+        <div css={styles.optionStyles} key={`field_${index}`}>
+          <TextField
+            label={`Option ${index + 1}`}
+            value={fields[index]}
+            onChange={handleFieldChange(index)}
+            fullWidth
+            margin="normal"
+          />
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => removeField(index)}
+          >
+            Remove
+          </Button>
+        </div>
+      ))}
+      <Button variant="outlined" onClick={addField} margin="normal">
+        Add Option
+      </Button>
       <ToggleButtonGroup
         color="primary"
         value={alignment}
@@ -101,12 +99,18 @@ export const CreatePollView = () => {
         <ToggleButton value="android">Multiple-choice</ToggleButton>
       </ToggleButtonGroup>
 
-      <Button variant="contained" color="primary" fullWidth css={styles.button} onClick={
-        async () => {
-          const pollId = await Poll.create('fake_user_id', title, fields, allowMultiselect);
-          navigate(`/poll?id=${pollId}`);
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        css={styles.button}
+        onClick={
+          async () => {
+            const pollId = await Poll.create('fake_user_id', title, fields, allowMultiselect);
+            navigate(`/poll?id=${pollId}`);
+          }
         }
-      }>
+      >
         Create
       </Button>
     </div>
