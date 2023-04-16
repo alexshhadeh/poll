@@ -32,3 +32,10 @@ export async function sendVotes(pollId, choices) {
 
     console.log(`%cSent votes to poll with Id: ${pollId}`, "color: green;");
 }
+
+export async function toggleAllowViewResults(pollId, allowViewResults) {
+    const pollRef = doc(db, "polls", pollId);
+    await updateDoc(pollRef, {
+        allow_view_results: allowViewResults
+    });
+}

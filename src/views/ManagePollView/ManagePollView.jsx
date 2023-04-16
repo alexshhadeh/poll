@@ -27,6 +27,7 @@ export const ManagePollView = () => {
     const [allowViewResults, setAllowViewResults] = useState(false);
 
     const toggleAllowViewResults = () => {
+        Poll.toggleAllowViewResults(pollId, !allowViewResults);
         setAllowViewResults(!allowViewResults);
     };
 

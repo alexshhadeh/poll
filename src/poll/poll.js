@@ -64,8 +64,8 @@ export class Poll {
         }
     }
 
-    static async toggleAllowViewResults(pollId) {
-
+    static async toggleAllowViewResults(pollId, allowMultiselect) {
+        firestore.toggleAllowViewResults(pollId, allowMultiselect)
     }
 
 }
