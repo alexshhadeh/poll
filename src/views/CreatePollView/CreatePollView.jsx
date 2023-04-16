@@ -108,7 +108,7 @@ export const CreatePollView = () => {
             fields,
             allowMultiselect
           );
-          navigate(routes.pollViewById(pollId));
+          navigate(routes.managePollById(pollId));
         }}
       >
         Create

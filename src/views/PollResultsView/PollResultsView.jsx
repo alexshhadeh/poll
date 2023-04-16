@@ -31,6 +31,9 @@ export const PollResultsView = () => {
 
   return (
     <Box sx={styles.mainBox}>
+      {pollResults && {
+
+      }}
       <Typography variant="h4" css={styles.question}>
         {pollTitle}
       </Typography>

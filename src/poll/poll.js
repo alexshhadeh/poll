@@ -12,7 +12,8 @@ export class Poll {
                 return acc;
             }, {}),
 
-            allow_multiselect: allow_multiselect
+            allow_multiselect: allow_multiselect,
+            allow_view_results: false
         }
 
         if (Poll.verifyParams(params)) {
@@ -24,7 +25,12 @@ export class Poll {
 
     static async results(pollId) {
         const poll = await firestore.getPoll(pollId);
-        return poll.fields
+
+        if (poll.allow_view_results) {
+            return poll.fields
+        } else {
+            return null;
+        }
     }
 
     static async poll(pollId) {
@@ -56,6 +62,10 @@ export class Poll {
         } else {
             throw new Error('No choices were provided!')
         }
+    }
+
+    static async toggleAllowViewResults(pollId) {
+
     }
 
 }

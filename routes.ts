@@ -7,5 +7,6 @@ export const routes = {
   pollResultsView: '/results',
   manageView: '/manage',
   pollViewById: (pollId: string) => `/poll?id=${pollId}`,
+  managePollById: (pollId: string) => `/manage?id=${pollId}`,
   pollResultsViewById: (pollId: string) => `/results?id=${pollId}`,
 };
