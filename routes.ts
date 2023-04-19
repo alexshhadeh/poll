@@ -1,3 +1,5 @@
+const base = window.location.origin;
+
 export const routes = {
   homeView: '/',
   loginView: '/login',
@@ -8,4 +10,8 @@ export const routes = {
   manageView: '/manage',
   pollViewById: (pollId: string) => `/poll?id=${pollId}`,
   pollResultsViewById: (pollId: string) => `/results?id=${pollId}`,
+
+  get baseUrl() {
+    return base;
+  },
 };

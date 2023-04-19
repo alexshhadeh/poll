@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   FormControl,
-  Typography,
   FormGroup,
   Checkbox,
   FormControlLabel,
@@ -17,6 +16,7 @@ import {
 import { Poll } from '../../poll/poll';
 import { routes } from '../../../routes';
 import { styles } from './styles';
+import { PollQuestion } from '../../components/PollQuestion/PollQuestion';
 
 export const PollView = () => {
   const navigate = useNavigate();
@@ -95,9 +95,7 @@ export const PollView = () => {
 
   return (
     <Box sx={styles.mainBox}>
-      <Typography variant="h4" css={styles.question}>
-        {poll?.title}
-      </Typography>
+      <PollQuestion pollTitle={poll?.title} />
       <FormControl component="fieldset">
         <FormGroup>
           {poll?.fields.map((field, index) => {
