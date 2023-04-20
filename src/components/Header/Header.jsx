@@ -7,7 +7,33 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 
+import { app } from '../../api/firestore_db'
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from 'react-router';
+import { routes } from '../../../routes';
+const auth = getAuth(app);
+
 function ButtonAppBar() {
+  const navigate = useNavigate();
+
+  function handleSignOut() {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        signOut(auth).then(() => {
+          console.log(`%cUser with id: ${uid} logged out successfully`, "color: green;")
+          navigate(routes.loginView);
+        }).catch((error) => {
+          alert('Sorry, an error happend during log out, please try again.')
+        });
+        // ...
+      } else {
+        navigate(routes.loginView);
+        console.log(`%cLogout failed: there is no active user! Redirecting to login`, "color: yellow;")
+      }
+    });
+
+  }
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -24,7 +50,9 @@ function ButtonAppBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Poll App
           </Typography>
-          <Button color="inherit">Logout</Button>
+          <Button color="inherit" onClick={() => {
+            //handleSignOut() 
+          }}>Logout</Button>
         </Toolbar>
       </AppBar>
     </Box>

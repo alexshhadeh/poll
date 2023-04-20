@@ -9,17 +9,20 @@ import {
   Snackbar,
   Alert,
 } from '@mui/material';
-import { useNavigate } from 'react-router';
 import { isEmpty } from 'lodash';
 
 import { styles } from './styles';
 import { Poll } from '../../poll/poll';
+
+import { useNavigate } from 'react-router';
 import { routes } from '../../../routes';
 
 export const CreatePollView = () => {
+  const navigate = useNavigate();
+
   const [alignment, setAlignment] = React.useState('web');
   const [title, setTitle] = useState('');
-  const [fields, setFields] = useState([]);
+  const [fields, setFields] = useState(['', '']);
   const [allowMultiselect, setAllowMultiselect] = useState(false);
   const [open, setOpen] = React.useState(false);
 
@@ -34,8 +37,6 @@ export const CreatePollView = () => {
 
     setOpen(false);
   };
-
-  const navigate = useNavigate();
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);

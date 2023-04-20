@@ -13,30 +13,43 @@ import {
   Facebook as FacebookIcon,
   Google as GoogleIcon,
 } from '@mui/icons-material';
+//For error handling
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 import { styles } from './styles';
+import { useState } from 'react';
 
-// ##############################
-// FIREBASE AUTHENTICATION CONFIG
-// START
-// const firebase = require('firebase');
-// const firebaseui = require('firebaseui');
+import { app } from '../../api/firestore_db'
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-// // Initialize the FirebaseUI Widget using Firebase.
-// const ui = new firebaseui.auth.AuthUI(firebase.auth());
+import { useNavigate } from 'react-router';
+import { routes } from '../../../routes';
 
-// ui.start('#firebaseui-auth-container', {
-//   signInOptions: [
-//     firebase.auth.EmailAuthProvider.PROVIDER_ID
-//   ],
-//   // Other config options...
-// });
-
-// ##############################
-// FIREBASE AUTHENTICATION CONFIG
-// END
+const auth = getAuth(app);
 
 export const LoginView = () => {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [loginError, setLoginError] = useState(null)
+  function handleLogin() {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        console.log(`%cUser with id: ${user.uid} logged in successfully`, "color: green;")
+        navigate(routes.createPollView);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage)
+        setLoginError(error)
+      });
+  }
   return (
     <div css={styles.root}>
       <Avatar alt="App Logo" css={styles.logo} sx={{ width: 56, height: 56 }}>
@@ -45,6 +58,8 @@ export const LoginView = () => {
       <TextField
         label="Enter your email"
         type="email"
+        value={email}
+        onChange={event => setEmail(event.target.value)}
         fullWidth
         css={styles.input}
       />
@@ -52,6 +67,8 @@ export const LoginView = () => {
         label="Enter your password"
         type="password"
         fullWidth
+        value={password}
+        onChange={event => setPassword(event.target.value)}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -63,7 +80,13 @@ export const LoginView = () => {
         }}
         css={styles.input}
       />
-      <Button variant="contained" color="primary" fullWidth css={styles.button}>
+      {loginError &&
+        <Alert severity="error">
+          <AlertTitle>Login error</AlertTitle>
+          Please check your credentials and try again.
+        </Alert>
+      }
+      <Button variant="contained" color="primary" fullWidth css={styles.button} onClick={handleLogin}>
         Login
       </Button>
       <Divider css={styles.divider}>
@@ -95,7 +118,7 @@ export const LoginView = () => {
       </Grid>
 
       <Typography variant="body2" color="textSecondary" css={styles.or}>
-        Dont have an account? <a href="/#">Register now</a>
+        Dont have an account? <a onClick={() => { navigate(routes.signupView) }}>Register now</a>
       </Typography>
     </div>
   );
