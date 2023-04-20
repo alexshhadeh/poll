@@ -5,6 +5,7 @@ import { Box, FormControl, InputLabel, Input, Typography } from '@mui/material';
 
 import { styles } from './styles';
 import { Poll } from '../../poll/poll';
+import { PollQuestion } from '../../components/PollQuestion/PollQuestion';
 
 export const PollResultsView = () => {
   const [searchParams] = useSearchParams();
@@ -31,9 +32,7 @@ export const PollResultsView = () => {
 
   return (
     <Box sx={styles.mainBox}>
-      <Typography variant="h4" css={styles.question}>
-        {pollTitle}
-      </Typography>
+      <PollQuestion pollTitle={pollTitle} />
       {pollResults &&
         Object.keys(pollResults).map((result, index) => {
           return (
