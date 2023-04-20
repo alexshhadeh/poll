@@ -56,22 +56,6 @@ export class Poll {
       throw new Error('No choices were provided!');
     }
   }
-  static verifyParams(pollObject) {
-    for (const key in pollObject) {
-      if (pollObject[key] == null) {
-        throw new Error(`Poll has null value on "${key}" key`)
-      }
-    }
-    return true;
-  }
-
-  static verifyVotingChoices(choices) {
-    if (choices && Object.keys(choices).length) {
-      return true;
-    } else {
-      throw new Error('No choices were provided!')
-    }
-  }
 
   static async toggleAllowViewResults(pollId, allowMultiselect) {
     firestore.toggleAllowViewResults(pollId, allowMultiselect)
