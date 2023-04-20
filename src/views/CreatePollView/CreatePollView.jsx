@@ -70,7 +70,6 @@ export const CreatePollView = () => {
   const handleSubmit = useCallback(async () => {
     const filteredFields = fields.filter((element) => element !== '');
     if (title && !isEmpty(filteredFields)) {
-      console.log(fields.length);
 
       const pollId = await Poll.create(
         'fake_user_id',
@@ -79,7 +78,7 @@ export const CreatePollView = () => {
         allowMultiselect
       );
 
-      navigate(routes.pollViewById(pollId));
+      navigate(routes.managePollById(pollId));
     } else {
       handleOpenSnackbar();
     }
