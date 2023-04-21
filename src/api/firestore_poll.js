@@ -4,10 +4,6 @@ import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export async function createPoll(pollDocument) {
   const pollReference = await addDoc(collection(db, 'polls'), pollDocument);
-  console.log(
-    `%cPoll created in database with ID: ${pollReference.id}`,
-    'color: green;'
-  );
   return pollReference.id;
 }
 

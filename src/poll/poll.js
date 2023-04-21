@@ -2,7 +2,6 @@ import * as firestore from '../api/firestore_poll';
 
 export class Poll {
   static create(userId, title, fields, allow_multiselect) {
-    console.log('user id is ' + userId);
     const params = {
       user_id: userId,
       title: title,
