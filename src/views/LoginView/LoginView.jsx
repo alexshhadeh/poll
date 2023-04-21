@@ -20,14 +20,11 @@ import AlertTitle from '@mui/material/AlertTitle';
 import { styles } from './styles';
 import { useState } from 'react';
 
-import { app } from '../../api/firestore_db'
-import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 import { useNavigate } from 'react-router';
 import { routes } from '../../../routes';
-
-const googleProvider = new GoogleAuthProvider();
-const auth = getAuth(app);
+import { auth, googleProvider } from '../../components/Auth/Auth';
 
 export const LoginView = () => {
   const navigate = useNavigate();
@@ -49,6 +46,30 @@ export const LoginView = () => {
         const errorMessage = error.message;
         console.log(errorMessage)
         setLoginError(error)
+      });
+  }
+
+  function handleGoogleLogin() {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        navigate(routes.createPollView);
+
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
       });
   }
   return (
@@ -96,7 +117,7 @@ export const LoginView = () => {
         </Typography>
       </Divider>
       <Grid container spacing={1} justifyContent="center">
-        <Grid item>
+        {/* <Grid item>
           <Button
             variant="contained"
             color="primary"
@@ -105,38 +126,14 @@ export const LoginView = () => {
           >
             Facebook
           </Button>
-        </Grid>
+        </Grid> */}
         <Grid item>
           <Button
             variant="contained"
             color="secondary"
             css={styles.socialButton}
             startIcon={<GoogleIcon />}
-            onClick={
-              () => {
-                signInWithPopup(auth, googleProvider)
-                  .then((result) => {
-                    // This gives you a Google Access Token. You can use it to access the Google API.
-                    const credential = GoogleAuthProvider.credentialFromResult(result);
-                    const token = credential.accessToken;
-                    // The signed-in user info.
-                    const user = result.user;
-                    navigate(routes.createPollView);
-
-                    // IdP data available using getAdditionalUserInfo(result)
-                    // ...
-                  }).catch((error) => {
-                    // Handle Errors here.
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    // The email of the user's account used.
-                    const email = error.customData.email;
-                    // The AuthCredential type that was used.
-                    const credential = GoogleAuthProvider.credentialFromError(error);
-                    // ...
-                  });
-              }
-            }
+            onClick={handleGoogleLogin}
           >
             Google
           </Button>

@@ -47,7 +47,10 @@ function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {currentUser ? currentUser.email : 'Poll App'}
+            {currentUser ?
+              currentUser.displayName ? currentUser.displayName : currentUser.email
+              :
+              'Poll App'}
           </Typography>
           <Button color="inherit" onClick={async () => {
             await handleSignOut()

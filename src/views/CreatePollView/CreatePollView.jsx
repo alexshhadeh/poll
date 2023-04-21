@@ -71,12 +71,12 @@ export const CreatePollView = () => {
   };
 
   const handleSubmit = useCallback(async () => {
-    console.log(currentUser.email);
+    console.log('USER ID: ' + currentUser.uid);
     const filteredFields = fields.filter((element) => element !== '');
     if (title && !isEmpty(filteredFields)) {
 
       const pollId = await Poll.create(
-        'fake_user_id',
+        currentUser.uid,
         title,
         filteredFields,
         allowMultiselect

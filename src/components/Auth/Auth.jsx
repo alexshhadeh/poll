@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { app } from '../../api/firestore_db'
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
+
+
+export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+    prompt: 'select_account',
+});
 
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [pending, setPending] = useState(true);
-    const auth = getAuth(app);
 
     useEffect(() => {
         auth.onAuthStateChanged(user => {

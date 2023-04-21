@@ -18,8 +18,9 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 
 import { styles } from './styles';
-import { app } from '../../api/firestore_db'
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
+import { auth, googleProvider } from '../../components/Auth/Auth';
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -28,11 +29,9 @@ import { routes } from '../../../routes';
 export const SignupView = () => {
   const navigate = useNavigate();
 
-  const auth = getAuth(app);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState('');
-
   const [singUpError, setSignUpError] = useState(null)
 
   function handleSignUp() {
@@ -54,6 +53,30 @@ export const SignupView = () => {
     if (password === repeatedPassword) {
       return true;
     }
+  }
+
+  function handleGoogleLogin() {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        navigate(routes.createPollView);
+
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
   }
   return (
     <div css={styles.root}>
@@ -116,7 +139,7 @@ export const SignupView = () => {
         </Typography>
       </Divider>
       <Grid container spacing={1} justifyContent="center">
-        <Grid item>
+        {/* <Grid item>
           <Button
             variant="contained"
             color="primary"
@@ -125,13 +148,14 @@ export const SignupView = () => {
           >
             Facebook
           </Button>
-        </Grid>
+        </Grid> */}
         <Grid item>
           <Button
             variant="contained"
             color="secondary"
             css={styles.socialButton}
             startIcon={<GoogleIcon />}
+            onClick={handleGoogleLogin}
           >
             Google
           </Button>
