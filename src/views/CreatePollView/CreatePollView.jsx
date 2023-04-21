@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useContext } from 'react';
 import {
   Avatar,
   Button,
@@ -17,8 +17,11 @@ import { Poll } from '../../poll/poll';
 import { useNavigate } from 'react-router';
 import { routes } from '../../../routes';
 
+import { AuthContext } from '../../components/Auth/Auth'
+
 export const CreatePollView = () => {
   const navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
 
   const [alignment, setAlignment] = React.useState('web');
   const [title, setTitle] = useState('');
@@ -68,6 +71,7 @@ export const CreatePollView = () => {
   };
 
   const handleSubmit = useCallback(async () => {
+    console.log(currentUser.email);
     const filteredFields = fields.filter((element) => element !== '');
     if (title && !isEmpty(filteredFields)) {
 

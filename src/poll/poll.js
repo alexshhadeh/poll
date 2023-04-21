@@ -15,8 +15,6 @@ export class Poll {
     };
 
     if (Poll.verifyParams(params)) {
-      console.log('params that are sent to db');
-      console.log(params);
       return firestore.createPoll(params);
     }
   }
