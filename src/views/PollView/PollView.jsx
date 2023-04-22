@@ -95,55 +95,63 @@ export const PollView = () => {
 
   return (
     <Box sx={styles.mainBox}>
-      <PollQuestion pollTitle={poll?.title} />
-      <FormControl component="fieldset">
-        <FormGroup>
-          {poll?.fields.map((field, index) => {
-            const key = `field_${index}`;
-            return (
-              <Box key={key} css={styles.fields}>
-                {poll?.allow_multiselect ? (
-                  <FormControlLabel
-                    label={field}
-                    labelPlacement="start"
-                    control={
-                      <Checkbox
-                        checked={!!isCheckedByOptionNameMap[field]}
-                        onChange={(event) => handleCheckboxChange(event, field)}
-                        inputProps={{ 'aria-label': 'controlled' }}
+      {poll ? (
+        <>
+          <PollQuestion pollTitle={poll?.title} />
+          <FormControl component="fieldset">
+            <FormGroup>
+              {poll?.fields.map((field, index) => {
+                const key = `field_${index}`;
+                return (
+                  <Box key={key} css={styles.fields}>
+                    {poll?.allow_multiselect ? (
+                      <FormControlLabel
+                        label={field}
+                        labelPlacement="start"
+                        control={
+                          <Checkbox
+                            checked={!!isCheckedByOptionNameMap[field]}
+                            onChange={(event) =>
+                              handleCheckboxChange(event, field)
+                            }
+                            inputProps={{ 'aria-label': 'controlled' }}
+                          />
+                        }
                       />
-                    }
-                  />
-                ) : (
-                  <RadioGroup
-                    aria-labelledby="demo-controlled-radio-buttons-group"
-                    name="controlled-radio-buttons-group"
-                    value={radioValue}
-                    onChange={handleRadioChange}
-                  >
-                    <FormControlLabel
-                      value={field}
-                      control={<Radio />}
-                      label={field}
-                    />
-                  </RadioGroup>
-                )}
-              </Box>
-            );
-          })}
-        </FormGroup>
-      </FormControl>
-      <br />
-      <Button
-        variant="contained"
-        onClick={() => {
-          Poll.vote(pollId, voteResult);
-          navigate(routes.pollResultsViewById(pollId));
-        }}
-        css={styles.button}
-      >
-        Submit
-      </Button>
+                    ) : (
+                      <RadioGroup
+                        aria-labelledby="demo-controlled-radio-buttons-group"
+                        name="controlled-radio-buttons-group"
+                        value={radioValue}
+                        onChange={handleRadioChange}
+                      >
+                        <FormControlLabel
+                          value={field}
+                          control={<Radio />}
+                          label={field}
+                        />
+                      </RadioGroup>
+                    )}
+                  </Box>
+                );
+              })}
+            </FormGroup>
+            <br />
+            <Button
+              variant="contained"
+              onClick={() => {
+                Poll.vote(pollId, voteResult);
+                navigate(routes.pollResultsViewById(pollId));
+              }}
+              css={styles.button}
+            >
+              Submit
+            </Button>
+          </FormControl>
+        </>
+      ) : (
+        <></>
+      )}
     </Box>
   );
 };

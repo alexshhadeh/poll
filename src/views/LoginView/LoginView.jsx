@@ -9,10 +9,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {
-  Facebook as FacebookIcon,
-  Google as GoogleIcon,
-} from '@mui/icons-material';
+import { Google as GoogleIcon } from '@mui/icons-material';
 //For error handling
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
@@ -20,9 +17,14 @@ import AlertTitle from '@mui/material/AlertTitle';
 import { styles } from './styles';
 import { useState } from 'react';
 
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  // GoogleAuthProvider,
+} from 'firebase/auth';
 
 import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 import { routes } from '../../../routes';
 import { auth, googleProvider } from '../../components/Auth/Auth';
 
@@ -32,20 +34,23 @@ export const LoginView = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const [loginError, setLoginError] = useState(null)
+  const [loginError, setLoginError] = useState(null);
   function handleLogin() {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in 
+        // Signed in
         const user = userCredential.user;
-        console.log(`%cUser with id: ${user.uid} logged in successfully`, "color: green;")
+        console.log(
+          `%cUser with id: ${user.uid} logged in successfully`,
+          'color: green;'
+        );
         navigate(routes.createPollView);
       })
       .catch((error) => {
-        const errorCode = error.code;
+        // const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorMessage)
-        setLoginError(error)
+        console.log(errorMessage);
+        setLoginError(error);
       });
   }
 
@@ -53,22 +58,23 @@ export const LoginView = () => {
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
+        // const credential = GoogleAuthProvider.credentialFromResult(result);
+        // const token = credential.accessToken;
         // The signed-in user info.
-        const user = result.user;
+        // const user = result.user;
         navigate(routes.createPollView);
 
         // IdP data available using getAdditionalUserInfo(result)
         // ...
-      }).catch((error) => {
+      })
+      .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
         // The email of the user's account used.
-        const email = error.customData.email;
+        // const email = error.customData.email;
         // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
+        // const credential = GoogleAuthProvider.credentialFromError(error);
         // ...
       });
   }
@@ -81,7 +87,7 @@ export const LoginView = () => {
         label="Enter your email"
         type="email"
         value={email}
-        onChange={event => setEmail(event.target.value)}
+        onChange={(event) => setEmail(event.target.value)}
         fullWidth
         css={styles.input}
       />
@@ -90,7 +96,7 @@ export const LoginView = () => {
         type="password"
         fullWidth
         value={password}
-        onChange={event => setPassword(event.target.value)}
+        onChange={(event) => setPassword(event.target.value)}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -102,13 +108,19 @@ export const LoginView = () => {
         }}
         css={styles.input}
       />
-      {loginError &&
+      {loginError && (
         <Alert severity="error">
           <AlertTitle>Login error</AlertTitle>
           Please check your credentials and try again.
         </Alert>
-      }
-      <Button variant="contained" color="primary" fullWidth css={styles.button} onClick={handleLogin}>
+      )}
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        css={styles.button}
+        onClick={handleLogin}
+      >
         Login
       </Button>
       <Divider css={styles.divider}>
@@ -141,7 +153,7 @@ export const LoginView = () => {
       </Grid>
 
       <Typography variant="body2" color="textSecondary" css={styles.or}>
-        Dont have an account? <a onClick={() => { navigate(routes.signupView) }}>Register now</a>
+        Dont have an account? <Link to={routes.signupView}>Register now</Link>
       </Typography>
     </div>
   );

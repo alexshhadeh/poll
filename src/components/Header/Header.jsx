@@ -33,6 +33,7 @@ function ButtonAppBar() {
     navigate(routes.loginView);
     console.log(`%cUser logged out successfully`, 'color: green;');
   }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -46,13 +47,23 @@ function ButtonAppBar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography component="div" sx={{ flexGrow: 1 }}>
             {currentUser
               ? currentUser.displayName
                 ? currentUser.displayName
                 : currentUser.email
               : 'Poll App'}
           </Typography>
+          {currentUser && (
+            <>
+              <Button
+                color="inherit"
+                onClick={() => navigate(routes.createPollView)}
+              >
+                Create
+              </Button>
+            </>
+          )}
           <Button
             color="inherit"
             onClick={async () => {

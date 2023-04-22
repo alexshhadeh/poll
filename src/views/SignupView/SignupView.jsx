@@ -9,21 +9,23 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {
-  Facebook as FacebookIcon,
-  Google as GoogleIcon,
-} from '@mui/icons-material';
+import { Google as GoogleIcon } from '@mui/icons-material';
 //For error handling
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 
 import { styles } from './styles';
-import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  // GoogleAuthProvider,
+} from 'firebase/auth';
 
 import { auth, googleProvider } from '../../components/Auth/Auth';
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 import { routes } from '../../../routes';
 
 export const SignupView = () => {
@@ -32,7 +34,7 @@ export const SignupView = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState('');
-  const [singUpError, setSignUpError] = useState(null)
+  const [singUpError, setSignUpError] = useState(null);
 
   function handleSignUp() {
     if (verifyPassword(password, password))
@@ -40,13 +42,16 @@ export const SignupView = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
-          console.log(`%cUser with id: ${user.uid} created successfully`, "color: green;")
+          console.log(
+            `%cUser with id: ${user.uid} created successfully`,
+            'color: green;'
+          );
           navigate(routes.createPollView);
         })
         .catch((error) => {
           const errorMessage = error.message;
-          console.log(errorMessage)
-          setSignUpError(error)
+          console.log(errorMessage);
+          setSignUpError(error);
         });
   }
   function verifyPassword(password, repeatedPassword) {
@@ -59,22 +64,23 @@ export const SignupView = () => {
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
+        // const credential = GoogleAuthProvider.credentialFromResult(result);
+        // const token = credential.accessToken;
         // The signed-in user info.
-        const user = result.user;
+        // const user = result.user;
         navigate(routes.createPollView);
 
         // IdP data available using getAdditionalUserInfo(result)
         // ...
-      }).catch((error) => {
+      })
+      .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
         // The email of the user's account used.
-        const email = error.customData.email;
+        // const email = error.customData.email;
         // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
+        // const credential = GoogleAuthProvider.credentialFromError(error);
         // ...
       });
   }
@@ -87,14 +93,17 @@ export const SignupView = () => {
         label="Email"
         type="email"
         value={email}
-        onChange={event => setEmail(event.target.value)}
+        onChange={(event) => setEmail(event.target.value)}
         fullWidth
-        css={styles.input} />
+        css={styles.input}
+      />
       <TextField
         label="Password"
         type="password"
         value={password}
-        onChange={event => { setPassword(event.target.value) }}
+        onChange={(event) => {
+          setPassword(event.target.value);
+        }}
         fullWidth
         InputProps={{
           endAdornment: (
@@ -111,7 +120,9 @@ export const SignupView = () => {
         label="Confirm password"
         type="password"
         value={repeatedPassword}
-        onChange={event => { setRepeatedPassword(event.target.value) }}
+        onChange={(event) => {
+          setRepeatedPassword(event.target.value);
+        }}
         fullWidth
         InputProps={{
           endAdornment: (
@@ -124,13 +135,20 @@ export const SignupView = () => {
         }}
         css={styles.input}
       />
-      {singUpError &&
+      {singUpError && (
         <Alert severity="error">
           <AlertTitle>Sign up error</AlertTitle>
-          Please check if your email is correct and if passwords you entered are the same and try again.
+          Please check if your email is correct and if passwords you entered are
+          the same and try again.
         </Alert>
-      }
-      <Button variant="contained" color="primary" fullWidth css={styles.button} onClick={handleSignUp}>
+      )}
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        css={styles.button}
+        onClick={handleSignUp}
+      >
         Register
       </Button>
       <Divider css={styles.divider}>
@@ -163,7 +181,7 @@ export const SignupView = () => {
       </Grid>
 
       <Typography variant="body2" color="textSecondary" css={styles.or}>
-        Already have an account? <a href="/#">Login now</a>
+        Already have an account? <Link to={routes.loginView}>Login now</Link>
       </Typography>
     </div>
   );
