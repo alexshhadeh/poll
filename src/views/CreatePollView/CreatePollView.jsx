@@ -17,7 +17,7 @@ import { Poll } from '../../poll/poll';
 import { useNavigate } from 'react-router';
 import { routes } from '../../../routes';
 
-import { AuthContext } from '../../components/Auth/Auth'
+import { AuthContext } from '../../components/Auth/Auth';
 
 export const CreatePollView = () => {
   const navigate = useNavigate();
@@ -74,7 +74,6 @@ export const CreatePollView = () => {
     console.log('USER ID: ' + currentUser.uid);
     const filteredFields = fields.filter((element) => element !== '');
     if (title && !isEmpty(filteredFields)) {
-
       const pollId = await Poll.create(
         currentUser.uid,
         title,
@@ -86,7 +85,7 @@ export const CreatePollView = () => {
     } else {
       handleOpenSnackbar();
     }
-  }, [allowMultiselect, fields, navigate, title]);
+  }, [allowMultiselect, currentUser.uid, fields, navigate, title]);
 
   return (
     <div css={styles.root}>

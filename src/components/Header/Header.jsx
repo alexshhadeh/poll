@@ -7,12 +7,12 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 
-import { app } from '../../api/firestore_db'
-import { getAuth } from "firebase/auth";
+import { app } from '../../api/firestore_db';
+import { getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router';
 import { routes } from '../../../routes';
 
-import { AuthContext } from '../Auth/Auth'
+import { AuthContext } from '../Auth/Auth';
 
 const auth = getAuth(app);
 
@@ -31,7 +31,7 @@ function ButtonAppBar() {
   async function handleSignOut() {
     await auth.signOut();
     navigate(routes.loginView);
-    console.log(`%cUser logged out successfully`, "color: green;")
+    console.log(`%cUser logged out successfully`, 'color: green;');
   }
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -47,17 +47,22 @@ function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {currentUser ?
-              currentUser.displayName ? currentUser.displayName : currentUser.email
-              :
-              'Poll App'}
+            {currentUser
+              ? currentUser.displayName
+                ? currentUser.displayName
+                : currentUser.email
+              : 'Poll App'}
           </Typography>
-          <Button color="inherit" onClick={async () => {
-            await handleSignOut()
-          }}>Logout</Button>
+          <Button
+            color="inherit"
+            onClick={async () => {
+              await handleSignOut();
+            }}
+          >
+            {currentUser ? 'Logout' : 'Login'}
+          </Button>
         </Toolbar>
       </AppBar>
     </Box>
   );
 }
-

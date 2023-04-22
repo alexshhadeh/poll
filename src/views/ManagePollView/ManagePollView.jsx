@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Typography, Divider, Box } from '@mui/material';
+import { Typography, Divider, Box, Button } from '@mui/material';
 
 import { Poll } from '../../poll/poll';
 import { PollQuestion } from '../../components/PollQuestion/PollQuestion';
@@ -13,6 +13,7 @@ export const ManagePollView = () => {
 
   const [poll, setPoll] = useState({});
   const [pollResults, setPollResults] = useState({});
+  const [allowViewResults, setAllowViewResults] = useState(false);
 
   const pollId = useMemo(() => searchParams.get('id'), [searchParams]);
   const pollLink = useMemo(
@@ -23,8 +24,14 @@ export const ManagePollView = () => {
   const fetchPoll = useCallback(async () => {
     const pollId = searchParams.get('id');
     const res = await Poll.poll(pollId);
+    // setAllowViewResults(poll.allow_view_results);
     setPoll(res);
   }, [searchParams]);
+
+  const toggleAllowViewResults = () => {
+    Poll.toggleAllowViewResults(pollId, !allowViewResults);
+    setAllowViewResults(!allowViewResults);
+  };
 
   const fetchPollResults = useCallback(async () => {
     const pollResults = await Poll.results(pollId);
@@ -36,6 +43,9 @@ export const ManagePollView = () => {
     fetchPoll();
     fetchPollResults();
   }, [fetchPoll, fetchPollResults]);
+
+  console.log(pollResults);
+  console.log(poll);
 
   return (
     <div>
@@ -59,12 +69,29 @@ export const ManagePollView = () => {
           Object.keys(pollResults).map((result, index) => {
             return (
               <div key={'field_' + index}>
-                <Typography sx={{ marginBottom: '10px' }}>
-                  {result}: {pollResults[result]}
+                <Typography
+                  sx={{
+                    marginBottom: '10px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    margin: '0 25px',
+                  }}
+                >
+                  <span>{result}:</span>{' '}
+                  <span>{pollResults[result]} results</span>
                 </Typography>
               </div>
             );
           })}
+        <Divider component="div" role="presentation" sx={{ margin: '25px' }} />
+        <Typography>Allow voters to see results</Typography>
+        <Button
+          sx={{ marginTop: '10px' }}
+          variant="contained"
+          onClick={toggleAllowViewResults}
+        >
+          {allowViewResults ? 'On' : 'Off'}
+        </Button>
       </Box>
     </div>
   );
