@@ -17,7 +17,7 @@ import { AuthContext } from '../../components/Auth/Auth';
 
 export const PollResultsView = () => {
   const [searchParams] = useSearchParams();
-  const [pollResultsData, setPollResultsData] = useState();
+  const [pollResultsData, setPollResultsData] = useState({});
   const [pollData, setPollData] = useState({});
 
   const { currentUser } = useContext(AuthContext);
@@ -28,11 +28,8 @@ export const PollResultsView = () => {
 
   const pollResults = useMemo(() => {
     if (currentUser) {
-      console.log(pollResultsData);
       return pollResultsData;
     } else {
-      console.log(pollData?.allow_view_results);
-      console.log(pollResultsData);
       return pollData?.allow_view_results ? pollResultsData : undefined;
     }
   }, [currentUser, pollData?.allow_view_results, pollResultsData]);

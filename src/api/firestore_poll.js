@@ -29,12 +29,12 @@ export async function sendVotes(pollId, choices) {
     fields: updatedFields,
   });
 
-  console.log(`%cSent votes to poll with Id: ${pollId}`, "color: green;");
+  console.log(`%cSent votes to poll with Id: ${pollId}`, 'color: green;');
 }
 
 export async function toggleAllowViewResults(pollId, allowViewResults) {
-  const pollRef = doc(db, "polls", pollId);
+  const pollRef = doc(db, 'polls', pollId);
   await updateDoc(pollRef, {
-    allow_view_results: allowViewResults
+    allow_view_results: allowViewResults,
   });
 }
