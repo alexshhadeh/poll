@@ -1,1 +1,1 @@
-{"name":"Poll App","short_name":"poll-app","start_url":"/","display":"standalone","background_color":"#FFFFFF","lang":"en","scope":"/","theme_color":"#6100FF","includeAssets":["**/*.{png}"],"icons":[{"src":"/pwa-icon-144x144.png","sizes":"144x144","type":"image/png"}]}
+{"name":"Poll App","short_name":"poll-app","start_url":"/poll/","display":"standalone","background_color":"#FFFFFF","lang":"en","scope":"/poll/","theme_color":"#6100FF","includeAssets":["**/*.{png}"],"icons":[{"src":"/pwa-icon-144x144.png","sizes":"144x144","type":"image/png"}]}
