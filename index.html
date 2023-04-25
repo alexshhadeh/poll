@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="canonical" href="https://alexshhadeh.github.io/poll/" />
+    <link rel="manifest" href="/poll/manifest.webmanifest">
     <meta charset="UTF-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <title>Poll</title>
@@ -9,6 +11,14 @@
   <link rel="manifest" href="/poll/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/poll/registerSW.js"></script></head>
   <body>
     <div id="root"></div>
+    <script>
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register (
+          '/poll/sw.js',
+          {scope: '/poll/'}
+        )
+      }
+    </script>
     
   </body>
 </html>
