@@ -1,6 +1,5 @@
 import { TextField, Button, Snackbar, Alert } from '@mui/material';
 import React, { useState } from 'react';
-// import copy from 'copy-to-clipboard';
 import * as copy from 'copy-to-clipboard';
 
 export const CopyToClipboard = ({ text, disabled }) => {
@@ -9,6 +8,7 @@ export const CopyToClipboard = ({ text, disabled }) => {
   const [openSnackbar, setSnackbarOpen] = React.useState(false);
 
   const handleCopy = () => {
+    window.navigator.vibrate(200);
     setSnackbarOpen(true);
     copy(url);
   };

@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Typography, Divider, Box, Button } from '@mui/material';
+import { RWebShare } from 'react-web-share';
 
 import { Poll } from '../../poll/poll';
 import { PollQuestion } from '../../components/PollQuestion/PollQuestion';
@@ -57,6 +58,20 @@ export const ManagePollView = () => {
           </Typography>
         </Box>
         <CopyToClipboard text={pollLink} disabled />
+        <Box sx={{ marginTop: '5px' }}>
+          <RWebShare
+            data={{
+              text: 'Your opinion matters! Click the link and cast your vote in our poll.',
+              url: pollLink,
+              title: poll?.title,
+            }}
+            onClick={() => console.log('shared successfully!')}
+          >
+            <Button variant="contained" color="success">
+              Share 🔗
+            </Button>
+          </RWebShare>
+        </Box>
         <Divider
           component="div"
           role="presentation"
