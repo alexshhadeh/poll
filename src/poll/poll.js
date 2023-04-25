@@ -58,4 +58,8 @@ export class Poll {
     firestore.toggleAllowViewResults(pollId, allowMultiselect)
   }
 
+  static async getPollIdByUserId(userId){
+    const pollId = firestore.getPollIdByUserId(userId);
+    return pollId;
+  }
 }

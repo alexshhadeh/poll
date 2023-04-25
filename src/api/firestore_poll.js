@@ -1,6 +1,6 @@
 import db from './firestore_db';
 
-import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export async function createPoll(pollDocument) {
   const pollReference = await addDoc(collection(db, 'polls'), pollDocument);
@@ -17,8 +17,6 @@ export async function getPoll(pollId) {
 export async function sendVotes(pollId, choices) {
   const poll = await getPoll(pollId);
   const updatedFields = { ...poll.fields };
-  console.log(updatedFields);
-  console.log(choices);
   for (const choice in choices) {
     updatedFields[choice] += choices[choice];
   }
@@ -37,4 +35,13 @@ export async function toggleAllowViewResults(pollId, allowViewResults) {
   await updateDoc(pollRef, {
     allow_view_results: allowViewResults,
   });
+}
+
+export async function getPollIdByUserId(userId){
+  const pollsCollection = collection(db, 'polls');
+  const query = await query(pollsCollection, where("user_id", "==", userId));
+  const pollId = await getDoc(query)
+  console.log(pollId.data());
+  return pollId;
+
 }

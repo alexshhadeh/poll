@@ -44,9 +44,6 @@ export const ManagePollView = () => {
     fetchPollResults();
   }, [fetchPoll, fetchPollResults]);
 
-  console.log(pollResults);
-  console.log(poll);
-
   return (
     <div>
       <Box>
