@@ -78,14 +78,14 @@ export const LoginView = () => {
       });
   }
 
-  function redirectAfterLogin(userId){
+  async function redirectAfterLogin(userId){
     console.log('redirecting after login')
-    const pollId = Poll.getPollIdByUserId(userId)
-    // if(pollId){
-    //   navigate(routes.managePollById(pollId));
-    // }else{
-    //   navigate(routes.createPollView);
-    // }
+    const pollId = await Poll.getPollIdByUserId(userId)
+    if(pollId){
+      navigate(routes.managePollById(pollId));
+    }else{
+      navigate(routes.createPollView);
+    }
   }
 
   return (
