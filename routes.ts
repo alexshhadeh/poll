@@ -1,16 +1,16 @@
 const base = window.location.origin;
 
 export const routes = {
-  homeView: '/',
-  loginView: '/login',
-  signupView: '/register',
-  createPollView: '/create',
-  pollView: '/poll',
-  pollResultsView: '/results',
-  manageView: '/manage',
-  pollViewById: (pollId: string) => `/poll?id=${pollId}`,
-  managePollById: (pollId: string) => `/manage?id=${pollId}`,
-  pollResultsViewById: (pollId: string) => `/results?id=${pollId}`,
+  homeView: '/poll/',
+  loginView: '/poll/login',
+  signupView: '/poll/register',
+  createPollView: '/poll/create',
+  pollView: '/poll/poll',
+  pollResultsView: '/poll/results',
+  manageView: '/poll/manage',
+  pollViewById: (pollId: string) => `/poll/poll?id=${pollId}`,
+  managePollById: (pollId: string) => `/poll/manage?id=${pollId}`,
+  pollResultsViewById: (pollId: string) => `/poll/results?id=${pollId}`,
 
   get baseUrl() {
     return base;
