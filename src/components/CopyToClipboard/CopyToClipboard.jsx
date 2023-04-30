@@ -1,6 +1,6 @@
 import { TextField, Button, Snackbar, Alert } from '@mui/material';
 import React, { useState } from 'react';
-import * as copy from 'copy-to-clipboard';
+import { CopyToClipboard as CTC } from 'react-copy-to-clipboard';
 
 export const CopyToClipboard = ({ text, disabled }) => {
   const [url, setUrl] = useState(text);
@@ -10,7 +10,6 @@ export const CopyToClipboard = ({ text, disabled }) => {
   const handleCopy = () => {
     window.navigator.vibrate(200);
     setSnackbarOpen(true);
-    copy(url);
   };
 
   const handleClose = (_, reason) => {
@@ -41,8 +40,10 @@ export const CopyToClipboard = ({ text, disabled }) => {
         disabled={disabled}
         sx={{ marginBottom: '8px' }}
       />
-      <Button variant="contained" onClick={handleCopy}>
-        Copy to clipboard
+      <Button variant="contained">
+        <CTC text={url} onCopy={handleCopy}>
+          <span>Copy to clipboard</span>
+        </CTC>
       </Button>
     </div>
   );
