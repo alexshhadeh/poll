@@ -25,9 +25,11 @@ export default defineConfig({
         name: 'Poll App',
         short_name: 'poll-app',
         includeAssets: ['**/*.{png}'],
+        scope: '/poll/',
+        start_url: '/poll/',
         icons: [
           {
-            src: 'poll/pwa-icon-144x144.png',
+            src: 'pwa-icon-144x144.png',
             sizes: '144x144',
             type: 'image/png',
           },
