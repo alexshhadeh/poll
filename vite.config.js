@@ -5,7 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/poll",
+  base: '/poll',
   plugins: [
     eslint(),
     react({
@@ -25,9 +25,11 @@ export default defineConfig({
         name: 'Poll App',
         short_name: 'poll-app',
         includeAssets: ['**/*.{png}'],
+        scope: '/poll/',
+        start_url: '/poll/',
         icons: [
           {
-            src: '/pwa-icon-144x144.png',
+            src: 'pwa-icon-144x144.png',
             sizes: '144x144',
             type: 'image/png',
           },
