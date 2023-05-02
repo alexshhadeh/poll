@@ -1,10 +1,21 @@
 import db from './firestore_db';
 
-import { collection, query, where, addDoc, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, query, where, addDoc, doc, deleteDoc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 
 export async function createPoll(pollDocument) {
   const pollReference = await addDoc(collection(db, 'polls'), pollDocument);
   return pollReference.id;
+}
+
+export async function deletePoll(pollId) {
+  const pollRef = doc(db, "polls", pollId);
+  deleteDoc(pollRef)
+    .then(() => {
+      console.log(`%cPoll with id: ${pollId} has been deleted successfully.`, 'color: green;');
+    })
+    .catch(error => {
+      console.log(error);
+    })
 }
 
 export async function getPoll(pollId) {
@@ -37,7 +48,7 @@ export async function toggleAllowViewResults(pollId, allowViewResults) {
   });
 }
 
-export async function getPollIdByUserId(userId){
+export async function getPollIdByUserId(userId) {
   const pollsCollection = collection(db, 'polls');
   const q = query(pollsCollection, where("user_id", "==", userId));
   const querySnapshot = await getDocs(q)

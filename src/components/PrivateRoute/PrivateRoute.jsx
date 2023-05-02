@@ -5,9 +5,6 @@ import { routes } from '../../../routes';
 
 const PrivateRoute = ({ children }) => {
     const { currentUser } = useContext(AuthContext);
-    if (currentUser) {
-        console.log('Detected user')
-    }
     return !!currentUser ? children : <Navigate to={routes.homeView} />
 }
 

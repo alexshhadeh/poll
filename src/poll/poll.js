@@ -1,7 +1,11 @@
 import * as firestore from '../api/firestore_poll';
 
 export class Poll {
-  static create(userId, title, fields, allow_multiselect) {
+  static async create(userId, title, fields, allow_multiselect) {
+    const lastPollId = await this.getPollIdByUserId(userId);
+    if (lastPollId) {
+      this.delete(lastPollId);
+    }
     const params = {
       user_id: userId,
       title: title,
@@ -16,6 +20,10 @@ export class Poll {
     if (Poll.verifyParams(params)) {
       return firestore.createPoll(params);
     }
+  }
+
+  static async delete(pollId) {
+    firestore.deletePoll(pollId);
   }
 
   static async results(pollId) {
@@ -58,8 +66,7 @@ export class Poll {
     firestore.toggleAllowViewResults(pollId, allowMultiselect)
   }
 
-  static async getPollIdByUserId(userId){
-    const pollId = firestore.getPollIdByUserId(userId);
-    return pollId;
+  static async getPollIdByUserId(userId) {
+    return firestore.getPollIdByUserId(userId);
   }
 }

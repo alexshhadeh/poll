@@ -45,11 +45,11 @@ export const LoginView = () => {
           `%cUser with id: ${user.uid} logged in successfully`,
           'color: green;'
         );
-        navigate(routes.createPollView);
+        redirectAfterLogin(user.uid)
       })
       .catch((error) => {
         // const errorCode = error.code;
-        const errorMessage = error.message;
+        const errorMessage = error.message; 
         console.log(errorMessage);
         setLoginError(error);
       });
@@ -62,7 +62,12 @@ export const LoginView = () => {
         // const credential = GoogleAuthProvider.credentialFromResult(result);
         // const token = credential.accessToken;
         // The signed-in user info.
-        redirectAfterLogin(result.user.uid)
+        const user = result.user;
+        console.log(
+          `%cUser with id: ${user.uid} logged in successfully`,
+          'color: green;'
+        );
+        redirectAfterLogin(user.uid)
         // IdP data available using getAdditionalUserInfo(result)
         // ...
       })
@@ -79,7 +84,6 @@ export const LoginView = () => {
   }
 
   async function redirectAfterLogin(userId){
-    console.log('redirecting after login')
     const pollId = await Poll.getPollIdByUserId(userId)
     if(pollId){
       navigate(routes.managePollById(pollId));
@@ -129,9 +133,7 @@ export const LoginView = () => {
         color="primary"
         fullWidth
         css={styles.button}
-        onClick={()=>{
-          redirectAfterLogin('ZSB9vGuXSaWDjXROxfRHiRrur3o1');
-        }}
+        onClick={handleLogin}
       >
         Login
       </Button>
