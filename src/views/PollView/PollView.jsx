@@ -139,8 +139,8 @@ export const PollView = () => {
             <br />
             <Button
               variant="contained"
-              onClick={() => {
-                Poll.vote(pollId, voteResult);
+              onClick={async () => {
+                await Poll.vote(pollId, voteResult);
                 navigate(routes.pollResultsViewById(pollId));
               }}
               css={styles.button}
