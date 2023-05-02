@@ -16,18 +16,6 @@ import { useSearchParams } from 'react-router-dom';
 const auth = getAuth(app);
 
 export const Header = () => {
-  const navigate = useNavigate();
-
-  const [searchParams] = useSearchParams();
-  const pollId = searchParams.get('id');
-
-  //useeffect
-  useEffect(() => {
-    if (pollId) {
-      navigate(routes.pollViewById(pollId));
-    }
-  }, []);
-
   return (
     <Typography variant="h1" component="h2">
       <ButtonAppBar />

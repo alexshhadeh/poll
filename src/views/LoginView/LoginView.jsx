@@ -15,7 +15,7 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 
 import { styles } from './styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import {
   signInWithEmailAndPassword,
@@ -24,6 +24,8 @@ import {
 } from 'firebase/auth';
 
 import { useNavigate } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
+
 import { Link } from 'react-router-dom';
 import { routes } from '../../../routes';
 import { auth, googleProvider } from '../../components/Auth/Auth';
@@ -31,6 +33,15 @@ import { Poll } from '../../poll/poll';
 
 export const LoginView = () => {
   const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const pollId = searchParams.get('id');
+
+  useEffect(() => {
+    if (pollId) {
+      navigate(routes.pollViewById(pollId));
+    }
+  }, []);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -49,7 +60,7 @@ export const LoginView = () => {
       })
       .catch((error) => {
         // const errorCode = error.code;
-        const errorMessage = error.message; 
+        const errorMessage = error.message;
         console.log(errorMessage);
         setLoginError(error);
       });
@@ -83,11 +94,11 @@ export const LoginView = () => {
       });
   }
 
-  async function redirectAfterLogin(userId){
+  async function redirectAfterLogin(userId) {
     const pollId = await Poll.getPollIdByUserId(userId)
-    if(pollId){
+    if (pollId) {
       navigate(routes.managePollById(pollId));
-    }else{
+    } else {
       navigate(routes.createPollView);
     }
   }
