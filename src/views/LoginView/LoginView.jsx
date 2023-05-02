@@ -27,6 +27,7 @@ import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { routes } from '../../../routes';
 import { auth, googleProvider } from '../../components/Auth/Auth';
+import { Poll } from '../../poll/poll';
 
 export const LoginView = () => {
   const navigate = useNavigate();
@@ -44,11 +45,11 @@ export const LoginView = () => {
           `%cUser with id: ${user.uid} logged in successfully`,
           'color: green;'
         );
-        navigate(routes.createPollView);
+        redirectAfterLogin(user.uid)
       })
       .catch((error) => {
         // const errorCode = error.code;
-        const errorMessage = error.message;
+        const errorMessage = error.message; 
         console.log(errorMessage);
         setLoginError(error);
       });
@@ -61,9 +62,12 @@ export const LoginView = () => {
         // const credential = GoogleAuthProvider.credentialFromResult(result);
         // const token = credential.accessToken;
         // The signed-in user info.
-        // const user = result.user;
-        navigate(routes.createPollView);
-
+        const user = result.user;
+        console.log(
+          `%cUser with id: ${user.uid} logged in successfully`,
+          'color: green;'
+        );
+        redirectAfterLogin(user.uid)
         // IdP data available using getAdditionalUserInfo(result)
         // ...
       })
@@ -78,6 +82,16 @@ export const LoginView = () => {
         // ...
       });
   }
+
+  async function redirectAfterLogin(userId){
+    const pollId = await Poll.getPollIdByUserId(userId)
+    if(pollId){
+      navigate(routes.managePollById(pollId));
+    }else{
+      navigate(routes.createPollView);
+    }
+  }
+
   return (
     <div css={styles.root}>
       <Avatar alt="App Logo" css={styles.logo} sx={{ width: 56, height: 56 }}>

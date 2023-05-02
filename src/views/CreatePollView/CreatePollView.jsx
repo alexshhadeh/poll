@@ -71,7 +71,6 @@ export const CreatePollView = () => {
   };
 
   const handleSubmit = useCallback(async () => {
-    console.log('USER ID: ' + currentUser.uid);
     const filteredFields = fields.filter((element) => element !== '');
     if (title && !isEmpty(filteredFields)) {
       const pollId = await Poll.create(
