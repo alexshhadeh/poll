@@ -8,6 +8,7 @@ export const routes = {
   pollView: '/poll/poll',
   pollResultsView: '/poll/results',
   manageView: '/poll/manage',
+  pollViewById: (pollId: string) => `/poll/poll?id=${pollId}`,
   managePollById: (pollId: string) => `/poll/manage?id=${pollId}`,
   pollResultsViewById: (pollId: string) => `/poll/results?id=${pollId}`,
 

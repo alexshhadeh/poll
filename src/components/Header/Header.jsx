@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,10 +11,23 @@ import { useNavigate } from 'react-router';
 import { routes } from '../../../routes';
 
 import { AuthContext } from '../Auth/Auth';
+import { useSearchParams } from 'react-router-dom';
 
 const auth = getAuth(app);
 
 export const Header = () => {
+  const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const pollId = searchParams.get('id');
+
+  //useeffect
+  useEffect(() => {
+    if (pollId) {
+      navigate(routes.pollViewById(pollId));
+    }
+  }, []);
+
   return (
     <Typography variant="h1" component="h2">
       <ButtonAppBar />
