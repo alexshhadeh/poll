@@ -11,11 +11,30 @@ import { useNavigate } from 'react-router';
 import { routes } from '../../../routes';
 
 import { AuthContext } from '../Auth/Auth';
-import { useSearchParams } from 'react-router-dom';
+import { Poll } from '../../poll/poll';
 
 const auth = getAuth(app);
 
+
 export const Header = () => {
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentUser) {
+      redirectAfterLogin(currentUser.uid)
+    }
+  }, []);
+
+  async function redirectAfterLogin(userId) {
+    const pollId = await Poll.getPollIdByUserId(userId)
+    if (pollId) {
+      navigate(routes.managePollById(pollId));
+    } else {
+      navigate(routes.createPollView);
+    }
+  }
+
   return (
     <Typography variant="h1" component="h2">
       <ButtonAppBar />
