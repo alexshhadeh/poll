@@ -40,9 +40,7 @@ export const MainRouterContainer = () => {
       <Route path={routes.homeView} element={<LoginView />} />
       <Route path={routes.loginView} element={<LoginView />} />
       <Route path={routes.signupView} element={<SignupView />} />
-      <Route path={routes.pollView} element={<PollView />}>
-        <Route path={routes.pollViewById(':pollId')} element={<PollView />} />
-      </Route>
+      <Route path={routes.pollView} element={<PollView />}/>
       <Route path={routes.pollResultsView} element={<PollResultsView />}>
         <Route
           path={routes.pollResultsViewById(':pollId')}

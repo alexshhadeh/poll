@@ -18,7 +18,7 @@ export const ManagePollView = () => {
 
   const pollId = useMemo(() => searchParams.get('id'), [searchParams]);
   const pollLink = useMemo(
-    () => `${routes.baseUrl}${routes.pollViewById(pollId)}`,
+    () => `${routes.baseUrl}${routes.pollView}?id=${pollId}`,
     [pollId]
   );
 
