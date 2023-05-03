@@ -29,6 +29,8 @@ import { Link } from 'react-router-dom';
 import { routes } from '../../../routes';
 
 import db from '../../api/firestore_db';
+import { uploadImage } from '../../api/storage';
+
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export const SignupView = () => {
@@ -38,6 +40,8 @@ export const SignupView = () => {
   const [password, setPassword] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState('');
   const [singUpError, setSignUpError] = useState(null);
+
+  const [selectedImage, setSelectedImage] = useState(null);
 
   function handleSignUp() {
     if (verifyPassword(password, password))
@@ -164,6 +168,25 @@ export const SignupView = () => {
           the same and try again.
         </Alert>
       )}
+      <input
+        type="file"
+        name="myImage"
+        onChange={(event) => {
+          console.log(event.target.files[0]);
+          setSelectedImage(event.target.files[0]);
+        }}
+      />
+      <Button
+        variant="outlined"
+        fullWidth
+        css={styles.button}
+        onClick={() => {
+          uploadImage(selectedImage);
+        }}
+      >
+
+        Upload profile image
+      </Button>
       <Button
         variant="contained"
         color="primary"
