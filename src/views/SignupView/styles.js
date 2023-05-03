@@ -19,6 +19,10 @@ export const styles = {
     margin-top: 16px;
     margin-bottom: 8px;
   `,
+  avatar: css`
+    margin-top: 16px;
+    margin-bottom: 8px;
+  `,
   divider: css`
     margin-top: 8px;
     margin-bottom: 8px;

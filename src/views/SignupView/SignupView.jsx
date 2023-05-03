@@ -34,6 +34,7 @@ import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 export const SignupView = () => {
   const navigate = useNavigate();
 
+  const [selectedImage, setSelectedImage] = useState(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState('');
@@ -157,6 +158,27 @@ export const SignupView = () => {
         }}
         css={styles.input}
       />
+      {selectedImage !== null ?
+        (<Avatar
+          css={styles.avatar}
+          src={URL.createObjectURL(selectedImage)}
+          sx={{ width: 100, height: 100 }}/>)
+        :
+        (<Avatar
+          css={styles.avatar}
+          src="/broken-image.jpg"
+          sx={{ width: 100, height: 100 }}/>)
+      }
+      <Button variant="contained" component="label" css={styles.button}>
+        {selectedImage === null ? "Add avatar" : "Remove"}
+        <input
+          hidden
+          accept="image/*"
+          multiple type="file"
+          onClick={() => {if (selectedImage !== null) setSelectedImage(null)}}
+          onChange={(event) => {if (selectedImage === null) setSelectedImage(event.target.files[0])}}
+        />
+      </Button>
       {singUpError && (
         <Alert severity="error">
           <AlertTitle>Sign up error</AlertTitle>
