@@ -31,17 +31,16 @@ import { routes } from '../../../routes';
 import db from '../../api/firestore_db';
 import { uploadImage } from '../../api/storage';
 
-import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { GeoPoint, addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export const SignupView = () => {
   const navigate = useNavigate();
 
+  const [selectedImage, setSelectedImage] = useState(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState('');
   const [singUpError, setSignUpError] = useState(null);
-
-  const [selectedImage, setSelectedImage] = useState(null);
 
   function handleSignUp() {
     if (verifyPassword(password, password))
@@ -49,6 +48,10 @@ export const SignupView = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
+          console.log(
+            `%cUser with id: ${user.uid} created successfully`,
+            'color: green;'
+          );
           createFirestoreUser(user, true);
 
           navigate(routes.createPollView);
@@ -80,8 +83,6 @@ export const SignupView = () => {
       });
   }
 
-
-
   async function updateUserStats(is_logged_in_by_email) {
     const statsRef = doc(db, 'statistics', "created_users");
     const statsDoc = await getDoc(statsRef);
@@ -97,10 +98,14 @@ export const SignupView = () => {
   }
 
   async function createFirestoreUser(user, is_logged_in_by_email) {
+    const testLocation = {
+      latitude: 20,
+      longitude: 23
+    }
     const user_data = {
       uid: user.uid,
       email: user.email,
-      location: null,
+      location: new GeoPoint(testLocation.latitude, testLocation.longitude),
     }
     addDoc(collection(db, 'users'), user_data);
     console.log(`%cUser with id: ${user.uid} has been created successfully.`, 'color: green;');
@@ -162,6 +167,36 @@ export const SignupView = () => {
         }}
         css={styles.input}
       />
+      {selectedImage !== null ?
+        (<Avatar
+          css={styles.avatar}
+          src={URL.createObjectURL(selectedImage)}
+          sx={{ width: 100, height: 100 }} />)
+        :
+        (<Avatar
+          css={styles.avatar}
+          src="/broken-image.jpg"
+          sx={{ width: 100, height: 100 }} />)
+      }
+      <Button variant="contained" component="label" css={styles.button}>
+        {selectedImage === null ? "Add avatar" : "Change avatar"}
+        <input
+          hidden
+          accept="image/*"
+          multiple type="file"
+          onClick={() => { if (selectedImage !== null) setSelectedImage(null) }}
+          onChange={(event) => { if (selectedImage === null) setSelectedImage(event.target.files[0]) }}
+        />
+      </Button>
+      {selectedImage &&
+        (<Button
+          variant="contained"
+          color="primary"
+          css={styles.button}
+          onClick={() => { if (selectedImage !== null) setSelectedImage(null) }}
+        >
+          Remove avatar
+        </Button>)}
       {singUpError && (
         <Alert severity="error">
           <AlertTitle>Sign up error</AlertTitle>
@@ -169,35 +204,6 @@ export const SignupView = () => {
           the same and try again.
         </Alert>
       )}
-      <input
-        type="file"
-        name="myImage"
-        onChange={(event) => {
-          console.log(event.target.files[0]);
-          setSelectedImage(event.target.files[0]);
-        }}
-      />
-      {selectedImage && (
-        <div>
-          <img
-            alt="not found"
-            width={"250px"}
-            src={URL.createObjectURL(selectedImage)}
-          />
-          <br />
-          <button onClick={() => setSelectedImage(null)}>Remove</button>
-        </div>
-      )}
-      <Button
-        variant="outlined"
-        fullWidth
-        css={styles.button}
-        onClick={() => {
-          uploadImage(selectedImage);
-        }}
-      >
-        Upload profile image
-      </Button>
       <Button
         variant="contained"
         color="primary"
