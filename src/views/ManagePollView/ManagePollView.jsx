@@ -59,7 +59,7 @@ export const ManagePollView = () => {
   }
 
   function vibrate() {
-    console.log('Vibrating...')
+    window.navigator.vibrate(200);
   }
 
   // the useEffect is only there to call `fetchData` at the right time
