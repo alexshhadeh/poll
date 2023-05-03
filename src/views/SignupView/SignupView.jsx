@@ -179,6 +179,15 @@ export const SignupView = () => {
           onChange={(event) => {if (selectedImage === null) setSelectedImage(event.target.files[0])}}
         />
       </Button>
+      {selectedImage &&
+      (<Button
+        variant="contained"
+        color="primary"
+        css={styles.button}
+        onClick={() => {if (selectedImage !== null) setSelectedImage(null)}}
+      >
+        Remove avatar
+      </Button>) }
       {singUpError && (
         <Alert severity="error">
           <AlertTitle>Sign up error</AlertTitle>
