@@ -7,6 +7,19 @@ export async function createPoll(pollDocument) {
   return pollReference.id;
 }
 
+export async function updatePollStats(allow_multiselect) {
+  const statsRef = doc(db, 'statistics', "created_polls");
+  const statsDoc = await getDoc(statsRef);
+  const statsDocData = statsDoc.data();
+  if (allow_multiselect) {
+    statsDocData.multi_select += 1;
+  } else {
+    statsDocData.single_select += 1;
+  }
+
+  await updateDoc(statsRef, statsDocData);
+  console.log(`%cPoll statistics has been updated successfully.`, 'color: green;');
+}
 export async function deletePoll(pollId) {
   const pollRef = doc(db, "polls", pollId);
   deleteDoc(pollRef)

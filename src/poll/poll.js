@@ -18,7 +18,9 @@ export class Poll {
     };
 
     if (Poll.verifyParams(params)) {
-      return firestore.createPoll(params);
+      const createdPollId = await firestore.createPoll(params);
+      firestore.updatePollStats(allow_multiselect);
+      return createdPollId;
     }
   }
 
