@@ -13,7 +13,7 @@ export const ManagePollView = () => {
   const [searchParams] = useSearchParams();
 
   const [poll, setPoll] = useState({});
-  const [pollResults, setPollResults] = useState({});
+  const [pollResults, setPollResults] = useState(JSON.parse(sessionStorage.getItem('pollResults')));
   const [allowViewResults, setAllowViewResults] = useState(false);
 
   const pollId = useMemo(() => searchParams.get('id'), [searchParams]);
@@ -35,9 +35,32 @@ export const ManagePollView = () => {
   };
 
   const fetchPollResults = useCallback(async () => {
-    const pollResults = await Poll.results(pollId);
-    setPollResults(pollResults);
+    const newPollResults = await Poll.results(pollId);
+
+    if (areEqualShallow(newPollResults, pollResults) == false) {
+      vibrate();
+    }
+    setPollResults(newPollResults);
+    sessionStorage.setItem("pollResults", JSON.stringify(newPollResults));
   }, [pollId]);
+
+  function areEqualShallow(a, b) {
+    for (var key in a) {
+      if (!(key in b) || a[key] !== b[key]) {
+        return false;
+      }
+    }
+    for (var key in b) {
+      if (!(key in a) || a[key] !== b[key]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function vibrate() {
+    console.log('Vibrating...')
+  }
 
   // the useEffect is only there to call `fetchData` at the right time
   useEffect(() => {
