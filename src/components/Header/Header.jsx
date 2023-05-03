@@ -12,21 +12,27 @@ import { routes } from '../../../routes';
 
 import { AuthContext } from '../Auth/Auth';
 import { Poll } from '../../poll/poll';
+import { useSearchParams } from 'react-router-dom';
 
 const auth = getAuth(app);
 
 
 export const Header = () => {
+  const [searchParams] = useSearchParams();
+  const paramPollId = searchParams.get('id');
+
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (currentUser) {
-      redirectAfterLogin(currentUser.uid)
+      if (!paramPollId) {
+        redirectAfterLogin(currentUser.uid)
+      }
     }
   }, []);
 
-  async function redirectAfterLogin(userId) {
+  async function redirectAfterLogin(userId, paramPollId) {
     const pollId = await Poll.getPollIdByUserId(userId)
     if (pollId) {
       navigate(routes.managePollById(pollId));
