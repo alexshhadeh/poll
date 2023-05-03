@@ -29,7 +29,7 @@ import { Link } from 'react-router-dom';
 import { routes } from '../../../routes';
 
 import db from '../../api/firestore_db';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export const SignupView = () => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export const SignupView = () => {
             `%cUser with id: ${user.uid} created successfully`,
             'color: green;'
           );
-          updateUserStats(true);
+          createFirestoreUser(user, true);
 
           navigate(routes.createPollView);
         })
@@ -71,8 +71,8 @@ export const SignupView = () => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         // const credential = GoogleAuthProvider.credentialFromResult(result);
         // const token = credential.accessToken;
-        // const user = result.user;
-        updateUserStats(false);
+        const user = result.user;
+        createFirestoreUser(user, false);
         navigate(routes.createPollView);
         // IdP data available using getAdditionalUserInfo(result)
       })
@@ -80,11 +80,23 @@ export const SignupView = () => {
       });
   }
 
-  async function updateUserStats(logged_in_by_email) {
+  async function createFirestoreUser(user, is_logged_in_by_email) {
+    const user_data = {
+      uid: user.uid,
+      email: user.email,
+      location: null,
+    }
+    addDoc(collection(db, 'users'), user_data);
+    console.log(`%cUser with id: ${user.uid} has been created successfully.`, 'color: green;');
+    updateUserStats(is_logged_in_by_email)
+
+  }
+
+  async function updateUserStats(is_logged_in_by_email) {
     const statsRef = doc(db, 'statistics', "created_users");
     const statsDoc = await getDoc(statsRef);
     const statsDocData = statsDoc.data();
-    if (logged_in_by_email) {
+    if (is_logged_in_by_email) {
       statsDocData.by_email += 1;
     } else {
       statsDocData.by_external_authenticator += 1;
