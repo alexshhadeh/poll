@@ -1,7 +1,6 @@
 import db from './firestore_db';
 
 import { collection, query, where, addDoc, doc, deleteDoc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
-
 export async function createPoll(pollDocument) {
   const pollReference = await addDoc(collection(db, 'polls'), pollDocument);
   return pollReference.id;

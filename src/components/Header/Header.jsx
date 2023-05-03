@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,23 +14,42 @@ import { AuthContext } from '../Auth/Auth';
 import { Poll } from '../../poll/poll';
 import { useSearchParams } from 'react-router-dom';
 
+import { getUserProfileImage } from '../../api/storage';
+
 const auth = getAuth(app);
 
 
 export const Header = () => {
+  return (
+    <Typography variant="h1" component="h2">
+      <ButtonAppBar />
+    </Typography>
+  );
+};
+
+function ButtonAppBar() {
+
   const [searchParams] = useSearchParams();
   const paramPollId = searchParams.get('id');
 
+  const [profileImage, setProfileImage] = useState(null);
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (currentUser) {
+      displayProfileImage(currentUser.uid)
+
       if (!paramPollId) {
         redirectAfterLogin(currentUser.uid)
       }
     }
-  }, []);
+  }, [currentUser]);
+
+  async function displayProfileImage(userId) {
+    const profileImage = await getUserProfileImage(userId);
+    setProfileImage(profileImage)
+  }
 
   async function redirectAfterLogin(userId, paramPollId) {
     const pollId = await Poll.getPollIdByUserId(userId)
@@ -41,19 +60,9 @@ export const Header = () => {
     }
   }
 
-  return (
-    <Typography variant="h1" component="h2">
-      <ButtonAppBar />
-    </Typography>
-  );
-};
-
-function ButtonAppBar() {
-  const { currentUser } = useContext(AuthContext);
-  const navigate = useNavigate();
-
   async function handleSignOut() {
     await auth.signOut();
+    setProfileImage(null);
     navigate(routes.loginView);
     console.log(`%cUser logged out successfully`, 'color: green;');
   }
@@ -63,6 +72,11 @@ function ButtonAppBar() {
       <AppBar position="static">
         <Toolbar>
           <Typography component="div" sx={{ flexGrow: 1 }}>
+            {
+              currentUser && (
+                <img src={profileImage ? profileImage : currentUser.photoURL ? currentUser.photoURL : ""} alt="" style={{ borderRadius: '50%', width: '3rem', height: '3rem' }} />
+              )
+            }
             {currentUser
               ? currentUser.displayName
                 ? currentUser.displayName

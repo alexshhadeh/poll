@@ -49,10 +49,6 @@ export const SignupView = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
-          console.log(
-            `%cUser with id: ${user.uid} created successfully`,
-            'color: green;'
-          );
           createFirestoreUser(user, true);
 
           navigate(routes.createPollView);
@@ -84,17 +80,7 @@ export const SignupView = () => {
       });
   }
 
-  async function createFirestoreUser(user, is_logged_in_by_email) {
-    const user_data = {
-      uid: user.uid,
-      email: user.email,
-      location: null,
-    }
-    addDoc(collection(db, 'users'), user_data);
-    console.log(`%cUser with id: ${user.uid} has been created successfully.`, 'color: green;');
-    updateUserStats(is_logged_in_by_email)
 
-  }
 
   async function updateUserStats(is_logged_in_by_email) {
     const statsRef = doc(db, 'statistics', "created_users");
@@ -108,6 +94,21 @@ export const SignupView = () => {
 
     await updateDoc(statsRef, statsDocData);
     console.log(`%cUser statistics has been updated successfully.`, 'color: green;');
+  }
+
+  async function createFirestoreUser(user, is_logged_in_by_email) {
+    const user_data = {
+      uid: user.uid,
+      email: user.email,
+      location: null,
+    }
+    addDoc(collection(db, 'users'), user_data);
+    console.log(`%cUser with id: ${user.uid} has been created successfully.`, 'color: green;');
+    if (selectedImage) {
+      const imageName = 'profile_image_' + String(user.uid);
+      uploadImage(selectedImage, imageName)
+    }
+    updateUserStats(is_logged_in_by_email)
 
   }
   return (
@@ -176,6 +177,17 @@ export const SignupView = () => {
           setSelectedImage(event.target.files[0]);
         }}
       />
+      {selectedImage && (
+        <div>
+          <img
+            alt="not found"
+            width={"250px"}
+            src={URL.createObjectURL(selectedImage)}
+          />
+          <br />
+          <button onClick={() => setSelectedImage(null)}>Remove</button>
+        </div>
+      )}
       <Button
         variant="outlined"
         fullWidth
@@ -184,7 +196,6 @@ export const SignupView = () => {
           uploadImage(selectedImage);
         }}
       >
-
         Upload profile image
       </Button>
       <Button
