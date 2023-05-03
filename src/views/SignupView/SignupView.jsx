@@ -28,6 +28,9 @@ import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { routes } from '../../../routes';
 
+import db from '../../api/firestore_db';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+
 export const SignupView = () => {
   const navigate = useNavigate();
 
@@ -46,6 +49,8 @@ export const SignupView = () => {
             `%cUser with id: ${user.uid} created successfully`,
             'color: green;'
           );
+          updateUserStats(true);
+
           navigate(routes.createPollView);
         })
         .catch((error) => {
@@ -66,23 +71,28 @@ export const SignupView = () => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         // const credential = GoogleAuthProvider.credentialFromResult(result);
         // const token = credential.accessToken;
-        // The signed-in user info.
         // const user = result.user;
+        updateUserStats(false);
         navigate(routes.createPollView);
-
         // IdP data available using getAdditionalUserInfo(result)
-        // ...
       })
       .catch((error) => {
-        // Handle Errors here.
-        // const errorCode = error.code;
-        // const errorMessage = error.message;
-        // The email of the user's account used.
-        // const email = error.customData.email;
-        // The AuthCredential type that was used.
-        // const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
       });
+  }
+
+  async function updateUserStats(logged_in_by_email) {
+    const statsRef = doc(db, 'statistics', "created_users");
+    const statsDoc = await getDoc(statsRef);
+    const statsDocData = statsDoc.data();
+    if (logged_in_by_email) {
+      statsDocData.by_email += 1;
+    } else {
+      statsDocData.by_external_authenticator += 1;
+    }
+
+    await updateDoc(statsRef, statsDocData);
+    console.log(`%cUser statistics has been updated successfully.`, 'color: green;');
+
   }
   return (
     <div css={styles.root}>
