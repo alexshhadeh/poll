@@ -41,16 +41,11 @@ function ButtonAppBar() {
     if (currentUser) {
       displayProfileImage(currentUser.uid)
 
-      if (!paramPollId) {
-        redirectAfterLogin(currentUser.uid)
-      }
+      // if (!paramPollId) {
+      //   redirectAfterLogin(currentUser.uid)
+      // }
     }
   });
-
-  async function displayProfileImage(userId) {
-    const profileImage = await getUserProfileImage(userId);
-    setProfileImage(profileImage)
-  }
 
   async function redirectAfterLogin(userId, paramPollId) {
     const pollId = await Poll.getPollIdByUserId(userId)
@@ -59,6 +54,11 @@ function ButtonAppBar() {
     } else {
       navigate(routes.createPollView);
     }
+  }
+
+  async function displayProfileImage(userId) {
+    const profileImage = await getUserProfileImage(userId);
+    setProfileImage(profileImage)
   }
 
   async function handleSignOut() {
@@ -74,9 +74,9 @@ function ButtonAppBar() {
         <Toolbar>
           {
             currentUser && (
-                (<Avatar
-                  src={profileImage}
-                  sx={{ width: 50, height: 50 }}/>))
+              (<Avatar
+                src={profileImage}
+                sx={{ width: 50, height: 50 }} />))
           }
           <Typography component="div" sx={{ flexGrow: 1, margin: 2 }}>
             {currentUser
