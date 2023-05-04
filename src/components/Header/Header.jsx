@@ -74,13 +74,8 @@ function ButtonAppBar() {
         <Toolbar>
           {
             currentUser && (
-              profileImage ?
                 (<Avatar
                   src={profileImage}
-                  sx={{ width: 50, height: 50 }}/>)
-                :
-                (<Avatar
-                  src="/broken-image.jpg"
                   sx={{ width: 50, height: 50 }}/>))
           }
           <Typography component="div" sx={{ flexGrow: 1, margin: 2 }}>

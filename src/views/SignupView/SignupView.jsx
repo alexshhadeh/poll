@@ -163,15 +163,10 @@ export const SignupView = () => {
         }}
         css={styles.input}
       />
-      {selectedImage ?
+      {
         (<Avatar
           css={styles.avatar}
-          src={URL.createObjectURL(selectedImage)}
-          sx={{ width: 100, height: 100 }}/>)
-        :
-        (<Avatar
-          css={styles.avatar}
-          src="/broken-image.jpg"
+          src={selectedImage ? URL.createObjectURL(selectedImage) : ""}
           sx={{ width: 100, height: 100 }}/>)
       }
       <Button variant="outlined" component="label" css={styles.button}>
