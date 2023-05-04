@@ -8,6 +8,7 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  Tooltip,
 } from '@mui/material';
 import { Google as GoogleIcon } from '@mui/icons-material';
 //For error handling
@@ -27,6 +28,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { routes } from '../../../routes';
+import { geolocationService } from '../../utils/geolocation';
 
 import db from '../../api/firestore_db';
 import { uploadImage } from '../../api/storage';
@@ -41,6 +43,20 @@ export const SignupView = () => {
   const [password, setPassword] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState('');
   const [singUpError, setSignUpError] = useState(null);
+  const [ownerCoords, setOwnerCoords] = useState({ latitude: 0, longitude: 0 });
+
+  function handleGetLocation() {
+    const successCallback = (position) => {
+      const { latitude, longitude } = position.coords;
+      setOwnerCoords((prevCoords) => ({ ...prevCoords, latitude, longitude }));
+    };
+
+    const errorCallback = (error) => {
+      alert(error.message);
+    };
+
+    geolocationService.getForCurrentPosition(successCallback, errorCallback);
+  }
 
   function handleSignUp() {
     if (verifyPassword(password, password))
@@ -79,27 +95,29 @@ export const SignupView = () => {
         navigate(routes.createPollView);
         // IdP data available using getAdditionalUserInfo(result)
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   }
 
   async function createFirestoreUser(user, is_logged_in_by_email) {
     const user_data = {
       uid: user.uid,
       email: user.email,
-      location: null,
-    }
+      location: geolocationService.getGeopoint(ownerCoords),
+    };
     addDoc(collection(db, 'users'), user_data);
-    console.log(`%cUser with id: ${user.uid} has been created successfully.`, 'color: green;');
+    console.log(
+      `%cUser with id: ${user.uid} has been created successfully.`,
+      'color: green;'
+    );
     if (selectedImage) {
       const imageName = 'profile_image_' + String(user.uid);
-      uploadImage(selectedImage, imageName)
+      uploadImage(selectedImage, imageName);
     }
-    updateUserStats(is_logged_in_by_email)
+    updateUserStats(is_logged_in_by_email);
   }
 
   async function updateUserStats(is_logged_in_by_email) {
-    const statsRef = doc(db, 'statistics', "created_users");
+    const statsRef = doc(db, 'statistics', 'created_users');
     const statsDoc = await getDoc(statsRef);
     const statsDocData = statsDoc.data();
     if (is_logged_in_by_email) {
@@ -109,14 +127,21 @@ export const SignupView = () => {
     }
 
     await updateDoc(statsRef, statsDocData);
-    console.log(`%cUser statistics has been updated successfully.`, 'color: green;');
-
+    console.log(
+      `%cUser statistics has been updated successfully.`,
+      'color: green;'
+    );
   }
   return (
     <div css={styles.root}>
       <Avatar alt="App Logo" css={styles.logo} sx={{ width: 56, height: 56 }}>
         Register
       </Avatar>
+      <Divider css={styles.divider}>
+        <Typography variant="caption" color="textSecondary">
+          Required fields
+        </Typography>
+      </Divider>
       <TextField
         label="Email"
         type="email"
@@ -163,31 +188,62 @@ export const SignupView = () => {
         }}
         css={styles.input}
       />
-      {
-        (<Avatar
-          css={styles.avatar}
-          src={selectedImage ? URL.createObjectURL(selectedImage) : ""}
-          sx={{ width: 100, height: 100 }}/>)
-      }
+      <Tooltip
+        title={
+          'Share location us. You data is safe and used only for research purposes.'
+        }
+      >
+        <Divider css={styles.divider}>
+          <Typography
+            sx={{ textAlign: 'left' }}
+            variant="caption"
+            color="textSecondary"
+          >
+            Optional fields
+          </Typography>
+        </Divider>
+      </Tooltip>
+      <Avatar
+        css={styles.avatar}
+        src={selectedImage ? URL.createObjectURL(selectedImage) : ''}
+        sx={{ width: 100, height: 100 }}
+      />
       <Button variant="outlined" component="label" css={styles.button}>
-        {selectedImage ? "Change avatar" : "Add avatar"}
+        {selectedImage ? 'Change avatar' : 'Add avatar'}
         <input
           hidden
           accept="image/*"
-          multiple type="file"
-          onClick={() => {selectedImage && setSelectedImage(null)}}
-          onChange={(event) => {!selectedImage && setSelectedImage(event.target.files[0])}}
+          multiple
+          type="file"
+          onClick={() => {
+            selectedImage && setSelectedImage(null);
+          }}
+          onChange={(event) => {
+            !selectedImage && setSelectedImage(event.target.files[0]);
+          }}
         />
       </Button>
-      {selectedImage &&
-      (<Button
-        variant="outlined"
-        color="primary"
+      {selectedImage && (
+        <Button
+          variant="outlined"
+          color="primary"
+          css={styles.button}
+          onClick={() => {
+            selectedImage && setSelectedImage(null);
+          }}
+        >
+          Remove avatar
+        </Button>
+      )}
+      <Button
+        variant="contained"
+        color="secondary"
+        fullWidth
         css={styles.button}
-        onClick={() => {selectedImage && setSelectedImage(null)}}
+        onClick={handleGetLocation}
       >
-        Remove avatar
-      </Button>) }
+        Ask for location
+      </Button>
       {singUpError && (
         <Alert severity="error">
           <AlertTitle>Sign up error</AlertTitle>
