@@ -24,12 +24,15 @@ export const ManagePollView = () => {
 
   const fetchPoll = useCallback(async () => {
     const pollId = searchParams.get('id');
-    const res = await Poll.poll(pollId);
+    const poll = await Poll.poll(pollId);
     // setAllowViewResults(poll.allow_view_results);
-    setPoll(res);
+    setPoll(poll);
+    setAllowViewResults(poll.allow_view_results)
+
   }, [searchParams]);
 
   const toggleAllowViewResults = () => {
+    console.log('togglin allow view in manage')
     Poll.toggleAllowViewResults(pollId, !allowViewResults);
     setAllowViewResults(!allowViewResults);
   };
@@ -37,30 +40,9 @@ export const ManagePollView = () => {
   const fetchPollResults = useCallback(async () => {
     const newPollResults = await Poll.results(pollId);
 
-    if (areEqualShallow(newPollResults, pollResults) == false) {
-      vibrate();
-    }
     setPollResults(newPollResults);
     sessionStorage.setItem("pollResults", JSON.stringify(newPollResults));
   }, [pollId]);
-
-  function areEqualShallow(a, b) {
-    for (var key in a) {
-      if (!(key in b) || a[key] !== b[key]) {
-        return false;
-      }
-    }
-    for (var key in b) {
-      if (!(key in a) || a[key] !== b[key]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  function vibrate() {
-    window.navigator.vibrate(200);
-  }
 
   // the useEffect is only there to call `fetchData` at the right time
   useEffect(() => {

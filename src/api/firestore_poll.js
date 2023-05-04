@@ -56,7 +56,8 @@ export async function sendVotes(pollId, choices) {
 
 export async function toggleAllowViewResults(pollId, allowViewResults) {
   const pollRef = doc(db, 'polls', pollId);
-  await updateDoc(pollRef, {
+  console.log('toggling allow in firestore poll')
+  updateDoc(pollRef, {
     allow_view_results: allowViewResults,
   });
 }
