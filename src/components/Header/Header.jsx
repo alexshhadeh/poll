@@ -45,7 +45,7 @@ function ButtonAppBar() {
         redirectAfterLogin(currentUser.uid)
       }
     }
-  }, [currentUser]);
+  });
 
   async function displayProfileImage(userId) {
     const profileImage = await getUserProfileImage(userId);
