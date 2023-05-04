@@ -95,7 +95,7 @@ export const SignupView = () => {
         navigate(routes.createPollView);
         // IdP data available using getAdditionalUserInfo(result)
       })
-      .catch((error) => {});
+      .catch((error) => { });
   }
 
   async function createFirestoreUser(user, is_logged_in_by_email) {
@@ -137,6 +137,57 @@ export const SignupView = () => {
       <Avatar alt="App Logo" css={styles.logo} sx={{ width: 56, height: 56 }}>
         Register
       </Avatar>
+
+
+
+      <Avatar
+        css={styles.avatar}
+        src={selectedImage ? URL.createObjectURL(selectedImage) : ''}
+        sx={{ width: 100, height: 100 }}
+      />
+      <Button variant="outlined" component="label" css={styles.button}>
+        {selectedImage ? 'Change avatar' : 'Add avatar'}
+        <input
+          hidden
+          accept="image/*"
+          multiple
+          type="file"
+          onClick={() => {
+            selectedImage && setSelectedImage(null);
+          }}
+          onChange={(event) => {
+            !selectedImage && setSelectedImage(event.target.files[0]);
+          }}
+        />
+      </Button>
+      {selectedImage && (
+        <Button
+          variant="outlined"
+          color="primary"
+          css={styles.button}
+          onClick={() => {
+            selectedImage && setSelectedImage(null);
+          }}
+        >
+          Remove avatar
+        </Button>
+      )}
+      <Tooltip
+        title={
+          'You can share your location for us. You data is safe and used only for research purposes.'
+        }
+      >
+        <Button
+          variant="contained"
+          color="secondary"
+          fullWidth
+          css={styles.button}
+          onClick={handleGetLocation}
+        >
+          Share your location
+        </Button>
+      </Tooltip>
+
       <Divider css={styles.divider}>
         <Typography variant="caption" color="textSecondary">
           Required fields
@@ -188,62 +239,9 @@ export const SignupView = () => {
         }}
         css={styles.input}
       />
-      <Tooltip
-        title={
-          'Share location us. You data is safe and used only for research purposes.'
-        }
-      >
-        <Divider css={styles.divider}>
-          <Typography
-            sx={{ textAlign: 'left' }}
-            variant="caption"
-            color="textSecondary"
-          >
-            Optional fields
-          </Typography>
-        </Divider>
-      </Tooltip>
-      <Avatar
-        css={styles.avatar}
-        src={selectedImage ? URL.createObjectURL(selectedImage) : ''}
-        sx={{ width: 100, height: 100 }}
-      />
-      <Button variant="outlined" component="label" css={styles.button}>
-        {selectedImage ? 'Change avatar' : 'Add avatar'}
-        <input
-          hidden
-          accept="image/*"
-          multiple
-          type="file"
-          onClick={() => {
-            selectedImage && setSelectedImage(null);
-          }}
-          onChange={(event) => {
-            !selectedImage && setSelectedImage(event.target.files[0]);
-          }}
-        />
-      </Button>
-      {selectedImage && (
-        <Button
-          variant="outlined"
-          color="primary"
-          css={styles.button}
-          onClick={() => {
-            selectedImage && setSelectedImage(null);
-          }}
-        >
-          Remove avatar
-        </Button>
-      )}
-      <Button
-        variant="contained"
-        color="secondary"
-        fullWidth
-        css={styles.button}
-        onClick={handleGetLocation}
-      >
-        Ask for location
-      </Button>
+
+
+
       {singUpError && (
         <Alert severity="error">
           <AlertTitle>Sign up error</AlertTitle>
