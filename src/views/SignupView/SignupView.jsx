@@ -163,7 +163,7 @@ export const SignupView = () => {
         }}
         css={styles.input}
       />
-      {selectedImage !== null ?
+      {selectedImage ?
         (<Avatar
           css={styles.avatar}
           src={URL.createObjectURL(selectedImage)}
@@ -174,8 +174,8 @@ export const SignupView = () => {
           src="/broken-image.jpg"
           sx={{ width: 100, height: 100 }}/>)
       }
-      <Button variant="contained" component="label" css={styles.button}>
-        {selectedImage === null ? "Add avatar" : "Change avatar"}
+      <Button variant="outlined" component="label" css={styles.button}>
+        {selectedImage ? "Change avatar" : "Add avatar"}
         <input
           hidden
           accept="image/*"
@@ -186,7 +186,7 @@ export const SignupView = () => {
       </Button>
       {selectedImage &&
       (<Button
-        variant="contained"
+        variant="outlined"
         color="primary"
         css={styles.button}
         onClick={() => {if (selectedImage !== null) setSelectedImage(null)}}

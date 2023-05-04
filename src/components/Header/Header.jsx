@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
 
 import { app } from '../../api/firestore_db';
 import { getAuth } from 'firebase/auth';
@@ -71,12 +72,18 @@ function ButtonAppBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography component="div" sx={{ flexGrow: 1 }}>
-            {
-              currentUser && (
-                <img src={profileImage ? profileImage : currentUser.photoURL ? currentUser.photoURL : ""} alt="" style={{ borderRadius: '50%', width: '3rem', height: '3rem' }} />
-              )
-            }
+          {
+            currentUser && (
+              profileImage ?
+                (<Avatar
+                  src={profileImage}
+                  sx={{ width: 50, height: 50 }}/>)
+                :
+                (<Avatar
+                  src="/broken-image.jpg"
+                  sx={{ width: 50, height: 50 }}/>))
+          }
+          <Typography component="div" sx={{ flexGrow: 1, margin: 2 }}>
             {currentUser
               ? currentUser.displayName
                 ? currentUser.displayName
