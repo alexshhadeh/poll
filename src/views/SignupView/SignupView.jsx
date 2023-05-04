@@ -180,8 +180,8 @@ export const SignupView = () => {
           hidden
           accept="image/*"
           multiple type="file"
-          onClick={() => {if (selectedImage !== null) setSelectedImage(null)}}
-          onChange={(event) => {if (selectedImage === null) setSelectedImage(event.target.files[0])}}
+          onClick={() => {selectedImage && setSelectedImage(null)}}
+          onChange={(event) => {!selectedImage && setSelectedImage(event.target.files[0])}}
         />
       </Button>
       {selectedImage &&
@@ -189,7 +189,7 @@ export const SignupView = () => {
         variant="outlined"
         color="primary"
         css={styles.button}
-        onClick={() => {if (selectedImage !== null) setSelectedImage(null)}}
+        onClick={() => {selectedImage && setSelectedImage(null)}}
       >
         Remove avatar
       </Button>) }
