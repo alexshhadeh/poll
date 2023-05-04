@@ -29,6 +29,8 @@ import { Link } from 'react-router-dom';
 import { routes } from '../../../routes';
 
 import db from '../../api/firestore_db';
+import { uploadImage } from '../../api/storage';
+
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export const SignupView = () => {
@@ -89,8 +91,11 @@ export const SignupView = () => {
     }
     addDoc(collection(db, 'users'), user_data);
     console.log(`%cUser with id: ${user.uid} has been created successfully.`, 'color: green;');
+    if (selectedImage) {
+      const imageName = 'profile_image_' + String(user.uid);
+      uploadImage(selectedImage, imageName)
+    }
     updateUserStats(is_logged_in_by_email)
-
   }
 
   async function updateUserStats(is_logged_in_by_email) {
