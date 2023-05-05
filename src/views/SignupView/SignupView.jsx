@@ -68,9 +68,9 @@ export const SignupView = () => {
             `%cUser with id: ${user.uid} created successfully`,
             'color: green;'
           );
-          createFirestoreUser(user, true);
-
-          navigate(routes.createPollView);
+          createFirestoreUser(user, true).then(() => {
+            navigate(routes.createPollView);
+          });
         })
         .catch((error) => {
           const errorMessage = error.message;
@@ -91,8 +91,9 @@ export const SignupView = () => {
         // const credential = GoogleAuthProvider.credentialFromResult(result);
         // const token = credential.accessToken;
         const user = result.user;
-        createFirestoreUser(user, false);
-        navigate(routes.createPollView);
+        createFirestoreUser(user, false).then(() => {
+          navigate(routes.createPollView);
+        });
         // IdP data available using getAdditionalUserInfo(result)
       })
       .catch((error) => { });
@@ -111,7 +112,7 @@ export const SignupView = () => {
     );
     if (selectedImage) {
       const imageName = 'profile_image_' + String(user.uid);
-      uploadImage(selectedImage, imageName);
+      await uploadImage(selectedImage, imageName);
     }
     updateUserStats(is_logged_in_by_email);
   }

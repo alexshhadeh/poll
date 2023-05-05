@@ -7,7 +7,7 @@ const storage = getStorage(app);
 // 'file' comes from the Blob or File API
 export async function uploadImage(file, fileName) {
     const storageRef = ref(storage, fileName);
-    uploadBytes(storageRef, file).then((snapshot) => {
+    await uploadBytes(storageRef, file).then((snapshot) => {
         console.log(`%cUploaded profile image.`, 'color: green;');
     });
 }

@@ -50,14 +50,19 @@ function ButtonAppBar() {
   async function redirectAfterLogin(userId, paramPollId) {
     const pollId = await Poll.getPollIdByUserId(userId)
     if (pollId) {
+      console.log('DOING AAAA')
       navigate(routes.managePollById(pollId));
     } else {
+      console.log('DOING BBBB')
+
       navigate(routes.createPollView);
     }
   }
 
   async function displayProfileImage(userId) {
     const profileImage = await getUserProfileImage(userId);
+    console.log('setting profile image')
+    console.log('profile image is ' + profileImage)
     setProfileImage(profileImage)
   }
 
